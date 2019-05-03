@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">Category: 技术 | YumeSama</title>
+  <title itemprop="name">TraceYang大佬的Houdini技术体系 过程化地形系统（二）：基于UE4植被系统（1） | YumeSama</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -381,104 +381,243 @@
   </div>
 </header>
 
-      
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
 <div class="pattern-center-blank"></div>
-<div class="pattern-center ">
-  <div class="pattern-attachment-img">
-    <img w data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/02/917318.jpg" class="lazyload" onerror="imgError(this,3)" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0562.jpg);" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0562.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      TraceYang大佬的Houdini技术体系 过程化地形系统（二）：基于UE4植被系统（1）</h1>
+      <p class="entry-census">
+        <span>
+          <a href="https://zhuanlan.zhihu.com/p/40596375">
+            <img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="https://zhuanlan.zhihu.com/p/40596375">TraceYang</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2018-7-26<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
   </div>
-  <header class="pattern-header ">
-    <h1 class="cat-title">野生技术协会</h1>
-    <span class="cat-des">
-      <p>Geek – Only for Love</p>
-    </span>
-  </header>
-</div>
+
 <div id="content" class="site-content">
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <h1 id="查看作者原文"><a href="#查看作者原文" class="headerlink" title="查看作者原文"></a><a href="https://zhuanlan.zhihu.com/p/40596375" target="_blank" rel="noopener">查看作者原文</a></h1><h1 id="Authored-by-TraceYang"><a href="#Authored-by-TraceYang" class="headerlink" title="Authored by TraceYang"></a>Authored by TraceYang</h1><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>通过之前的几篇分析实践，已经基本打通了UE4的Houdini植被管线部分，并对Far Cry5（简称FC5）的植被系统的需求做了整理，在接下来的几节中，会关注于如何使用Houdini基于UE4来开发类似FC5的植被生成系统。这里按工具制作流程分为几个部分来做阐述。</p>
+<p>1.使用Houdini开发类似FC5里的Generate_Terrain_Entities的HDA节点<br>2.修改Houdini Engine，让Generate_Terrain_Entities的Input和Output可以支持在UE4里生成植被<br>3.进一步优化Houdini Engine，可以让关卡设计人员可以在UE4 Editor里更加灵活和方便的修改</p>
+<a href="https://pic1.zhimg.com/v2-2a142d3d3cc99aa21eea22c593dc1f18_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-2a142d3d3cc99aa21eea22c593dc1f18_r.jpg"></a>  
+<p>本节的目标就是如何开发一个Generate_Terrain_Entities的HDA节点，并在Houdini里实现类似上图中FC5的效果，大致流程分为：</p>
+<ul>
+<li>创建HDA面板，为内部的过程化实现创建参数关联</li>
+<li>根据Viability中选择Terrain Data以其他的过程化生成的2D data，确定植被的生成范围</li>
+<li>根据Density，Sizes，Scale，Color，Rotation等面板参数，来生成Point Colud，以及Point对应的旋转，颜色，缩放等信息。</li>
+<li>多个HDA连接，每个HDA代表一种植被类型。并实现按照Viability范围和优先级的选择正确的Species。</li>
+<li>根据最终的PointCloud，用Copy to Point节点做植被的Instance化<h1 id="面板制作"><a href="#面板制作" class="headerlink" title="面板制作"></a>面板制作</h1>首先要做的，是创建一个Generate_Terrain_Entities的SOP节点，并且HDA的参数面板和Input/Ouput，这里先创建一个SOP节点，</li>
+</ul>
+<a href="https://pic2.zhimg.com/80/v2-2cefe78d5d2105fc1752c67e33cc5cd1_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-2cefe78d5d2105fc1752c67e33cc5cd1_hd.jpg"></a>  
+<p>参考FC5，创建一个类似的Generate_Terrain_Entities的参数面板和Input，Output的输出。</p>
+<a href="https://pic3.zhimg.com/v2-e604146f82d887c5c1eea8d2f43e61fa_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-e604146f82d887c5c1eea8d2f43e61fa_r.jpg"></a>
+<p>参数面板就和FC5文档里介绍的一样，具体做法就不多做叙述了，稍微有些Houdini经验的美术都可以实现。</p>
+<a href="https://pic4.zhimg.com/v2-f5fa641f58fe290f97bf82e956ca949f_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-f5fa641f58fe290f97bf82e956ca949f_r.jpg"></a>
+<p>参考FC5把Input Laber 设置为2个，Output为3个，Input Output接续的数据在下图有注释。这样把每个Speices链接链接在一起，具体如何起作用的在后文会有介绍。</p>
+<a href="https://pic2.zhimg.com/v2-cb8f316531dbc6f70930514dea09b6e1_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-cb8f316531dbc6f70930514dea09b6e1_r.jpg"></a>
+<p>复制完参数面板后，就是要实现根据参数来生成植被的Point Cloud信息的功能了，在之前管线里已经提到过，Point Cloud是使用Scatter节点，基于Heightfiled Mask的信息来生成的。接下来的目标就是如何根据植被系统的设置，正确的生成所对应的Mask。</p>
+<a href="https://pic3.zhimg.com/v2-6b6d66d064802f1ca7434308ba636b76_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-6b6d66d064802f1ca7434308ba636b76_r.jpg"></a>
+<h1 id="确定生成区域"><a href="#确定生成区域" class="headerlink" title="确定生成区域"></a>确定生成区域</h1><p>FC5的植被系统的生成区域来源主要是两部分，一个是基于地形数据生成的各种Mask数据，例如AO，Flow，Slope，这些Mask通常确定植被会生长在哪些区域，</p>
+<a href="https://pic2.zhimg.com/v2-24fee77330921e426a4792158ac4d8c5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-24fee77330921e426a4792158ac4d8c5_r.jpg"></a>
+<p>另外一种就是直接导入的2D数据，比如场景美术手绘的区域，以及一些在引擎里通过其他的过程化工具生成内容，比如街道，水塘的Mask，保证这些区域不会有植被放置。</p>
+<a href="https://pic2.zhimg.com/v2-5297a3a8dbdc193e2f4f767c60b5b3d1_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-5297a3a8dbdc193e2f4f767c60b5b3d1_r.jpg"></a>
+<p>把这不同Mask的组合根据规则和面板参数做数学组合，就得出最终的生成区域结果，这里简单的介绍下如何使用VEX脚本结合Houdini的节点来实现功能。</p>
+<p>首先是AO，Flow，Slope，Direction（Sun or Wind）等Terrain Abiotic Data的生成，这些大部分可以用Houdini自带的节点来生成</p>
+<a href="https://pic2.zhimg.com/80/v2-fd70bd83d844aeabf4fd793a127a5c15_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-fd70bd83d844aeabf4fd793a127a5c15_hd.jpg"></a>
+<p>AO的生成，这里使用官方论坛上的一个OpenCL加速的heigtfiled AO节点，链接地址：<a href="https://www.sidefx.com/forum/topic/54318/?page=1#post-243847" target="_blank" rel="noopener">https://www.sidefx.com/forum/topic/54318/?page=1#post-243847</a></p>
+<a href="https://pic2.zhimg.com/v2-b8b37061f52ab757929fc5bb8870c731_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-b8b37061f52ab757929fc5bb8870c731_r.jpg"></a>
+<p>Altitude可以直接读取height信息，但因为一些特殊的缘故，height的最低值并不一定为0，这里使用了一个Python节点，调用terraintoolutils.computeInputRange的函数来获得height的范围</p>
+<a href="https://pic3.zhimg.com/v2-04a0f8026339ef6d6b5ed0cf20c021ba_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-04a0f8026339ef6d6b5ed0cf20c021ba_r.jpg"></a>
+<p>这里增加一个altitude的Attribute的Ramp，用来获取制定范围内的高度信息</p>
+<a href="https://pic2.zhimg.com/v2-781f4edae4ad5036c88fac3d83ef9b31_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-781f4edae4ad5036c88fac3d83ef9b31_r.jpg"></a>
+<p>在Generate_Terrain_Entities内部，在名为Mask的SubNetwork里主要做这些各种Mask的处理工作</p>
+<a href="https://pic1.zhimg.com/v2-86cbac13bf928d303b8728ff2ed9da98_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-86cbac13bf928d303b8728ff2ed9da98_r.jpg"></a>
+<p>这个示例Vex代码里，迭代每一个Attribute的Ramp的Mask，然后合并到一起。为了简化有些功能没实现到Vex里，比如每个Attribute的Toggle开关和Power值的判断，不同的Attirbute，例如Altitued还要做一些特殊处理等等。另外FC5可以支持多组Combined Data后的Data Group再做二次Combine。最终会是双重循环的形式。</p>
+<a href="https://pic3.zhimg.com/v2-f9fcda8901ccecc5deb1cdea498e7ada_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-f9fcda8901ccecc5deb1cdea498e7ada_r.jpg"></a>
+<p>下图的效果就是只有一个Altitude（Height） Attribute的效果。</p>
+<a href="https://pic1.zhimg.com/v2-325eaa43e18d47cbf2cad33702def65c_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-325eaa43e18d47cbf2cad33702def65c_r.jpg"></a>
+<p>接着，在单独加入一个Slope的Attribute的效果</p>
+<a href="https://pic2.zhimg.com/v2-4903e75108e5f919eedf29ce60f2321d_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-4903e75108e5f919eedf29ce60f2321d_r.jpg"></a>
+<a href="https://pic1.zhimg.com/v2-3ed6a33cb2f521d229d85672ef178994_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-3ed6a33cb2f521d229d85672ef178994_r.jpg"></a>
+<p>最后得到两个Attribute合并的效果。</p>
+<a href="https://pic1.zhimg.com/v2-d4dd0273d5b63b8dac6679862845ad80_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-d4dd0273d5b63b8dac6679862845ad80_r.jpg"></a>
+<p>这样，houdini的生成区域的基本功能就完成了，后面就可以参考FC5，基于flow，direction等信息，制作出不同的植被生成区域的pattern</p>
+<a href="https://pic1.zhimg.com/v2-2eaf78b38a403b1e6ac216c81dfebcf0_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-2eaf78b38a403b1e6ac216c81dfebcf0_r.jpg"></a>
+<p>除此之外，FC5中还有一些用过程化工具生成mask要做为exclusion区域来使用</p>
+<a href="https://pic2.zhimg.com/v2-b868f8e22829635c5363b5805596059d_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-b868f8e22829635c5363b5805596059d_r.jpg"></a>
+<p>比如这里把生成water的区域，作为exclusion mask。</p>
+<a href="https://pic2.zhimg.com/v2-8549116af60e97013396922d6279cc19_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-8549116af60e97013396922d6279cc19_r.jpg"></a>
+<p>把exclusion mask作用到Alittude Attribute上，</p>
+<a href="https://pic1.zhimg.com/v2-26b393c934f22bf2cbf4a038a6de34cc_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-26b393c934f22bf2cbf4a038a6de34cc_r.jpg"></a>
+<p>原始的altitude attribute中加入water attribute</p>
+<a href="https://pic2.zhimg.com/v2-93d9c90ea23abd0bc35496e9c06337ad_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-93d9c90ea23abd0bc35496e9c06337ad_r.jpg"></a>
+<p>就得到了exclusion后的结果。</p>
+<a href="https://pic1.zhimg.com/v2-34689b31861b06c46438c47ece7054b4_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-34689b31861b06c46438c47ece7054b4_r.jpg"></a>
+<p>除此之外还有Noise，FC5的Noise的Size是受地形法线影响的，这根据Volume中height的位置，来取得height mesh里对应的Point的Normal，根据Normal的Y值来控制生成Noise的Size。</p>
+<a href="https://pic2.zhimg.com/v2-d312df2ca59378cdf0b5ea958fbebbc1_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-d312df2ca59378cdf0b5ea958fbebbc1_r.jpg"></a>
+<p>这样，不同坡度的噪声大小也不同。下图就是water和altitude attribute以及noise共通作用的结果。</p>
+<a href="https://pic1.zhimg.com/v2-f0890db8c27625737823dc77f029ba00_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-f0890db8c27625737823dc77f029ba00_r.jpg"></a>
+<p>最后得到的Mask，就是对应的植被生成区域。接下来就要根据Mask，来生成植被的Scatter Point Cloud了。</p>
+<h1 id="生成Point-Cloud"><a href="#生成Point-Cloud" class="headerlink" title="生成Point Cloud"></a>生成Point Cloud</h1><p>基于HeightFiled Mask来生成Point Cloud，通常使用HeightField Scatter就可以实现</p>
+<a href="https://pic3.zhimg.com/v2-d3c3f0103380f302ca322ab623224886_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-d3c3f0103380f302ca322ab623224886_r.jpg"></a>
+<p>而FC5的植被系统里，还是要考虑植被的Size和Age参数，来确定最终的Point Cloud，这里使用下面两个Attribute的Data Group来作为植被的生成信息</p>
+<a href="https://pic3.zhimg.com/v2-48f84f9b5bb0d6ddff2f1e5a6594f11a_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-48f84f9b5bb0d6ddff2f1e5a6594f11a_r.jpg"></a>
+<p>下图就是得到的Viability的信息。</p>
+<a href="https://pic3.zhimg.com/v2-a8f46932e3effbad109734194f5a8852_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-a8f46932e3effbad109734194f5a8852_r.jpg"></a>
+<p>接下来，需要把Viability Mask用SDF的方式转为Age的mask</p>
+<a href="https://pic2.zhimg.com/v2-55c958c9a253aab4bd19bc2064715f15_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-55c958c9a253aab4bd19bc2064715f15_r.jpg"></a>
+<p>通过convertvolume和isooffset节点，用SDF方式重新生成Age Mask</p>
+<a href="https://pic3.zhimg.com/80/v2-f3c2f8d1900169556c568ce612208b7e_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/80/v2-f3c2f8d1900169556c568ce612208b7e_hd.jpg"></a>
+<a href="https://pic4.zhimg.com/v2-88bb3727d70284f6d408fee3782f8093_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-88bb3727d70284f6d408fee3782f8093_r.jpg"></a>
+<p>接下来，通过Density面板，来配置密度，然后把Density写入到HeightFiled的Mask里（也可以自己新建一个volume来保存）。而通过Density Ramp来控制不同Size植被的密度值，也就是Age（Mask）越小的外围的小树，密度越高，而Age（Mask）比较大的树林中心的大树，密度会比较小。</p>
+<a href="https://pic2.zhimg.com/v2-20e4e0d043ec6bb3b75ac0c1d863f381_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-20e4e0d043ec6bb3b75ac0c1d863f381_r.jpg"></a>
+<p>把Density值作为Density Attriube传入到Scatter节点，同时输出Point的Radius属性。</p>
+<a href="https://pic3.zhimg.com/v2-1361ff7434bea3fdef2259c64c725e12_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-1361ff7434bea3fdef2259c64c725e12_r.jpg"></a>
+<a href="https://pic1.zhimg.com/v2-5485c98b9e9f897770af704cea810668_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-5485c98b9e9f897770af704cea810668_r.jpg"></a>
+<p>这样就得到了初步的Point Cloud，以及对应Point的Size，Pscale的信息。</p>
+<a href="https://pic2.zhimg.com/80/v2-d8ba8ce55efbe5621638c157fd5993a1_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-d8ba8ce55efbe5621638c157fd5993a1_hd.jpg"></a>
+<p>然后，通过Size面板，设定不同等级的植被的具体大小。</p>
+<a href="https://pic3.zhimg.com/v2-07a2adea5ea5a7ef6ae9418922a0b45e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-07a2adea5ea5a7ef6ae9418922a0b45e_r.jpg"></a>
+<p>以及对应的植被的颜色值。</p>
+<a href="https://pic1.zhimg.com/v2-e182682b52da477b4b40e3c9a71a65a4_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-e182682b52da477b4b40e3c9a71a65a4_r.jpg"></a>
+<p>就得到了带有具体Color和Transform信息的Point Cloud.</p>
+<a href="https://pic1.zhimg.com/v2-4dac71ec128b3b0c1a052eee73821d7c_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-4dac71ec128b3b0c1a052eee73821d7c_r.jpg"></a>
+<p>再通过Copy to Point节点，用Debug Tree进行测试，这样就得到了一种植被的Scatter结果。可以看到Age信息外围颜色较浅的树木密度相对较大，尺寸也较小，而Age信息内部的颜色较深的树木则尺寸比较大，散布的也相对稀疏一些。</p>
+<a href="https://pic4.zhimg.com/v2-635bce0f501b44dd07e5f2979b0051ef_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-635bce0f501b44dd07e5f2979b0051ef_r.jpg"></a>
+<p>这样，一种植被的生成功能已经初步完成，但生态系统里，还是要考虑多种植被的共通生长的竞争关系。以及同一种植被之间的竞争关系。这就需要实现FC5里通过对Viability Radius的判断来选择Species的功能。</p>
+<h1 id="根据Viability选择Species"><a href="#根据Viability选择Species" class="headerlink" title="根据Viability选择Species"></a>根据Viability选择Species</h1><p>FC5使用的方法，是根据Viability Radius和Viability强度，来确定一个范围内生成哪种植被。</p>
+<a href="https://pic4.zhimg.com/v2-407dd961d5b78a5c064f0abbfc6a8c23_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-407dd961d5b78a5c064f0abbfc6a8c23_r.jpg"></a>
+<p>这个实现也比较简单，先获取一个Point Radius范围内的全部Point，把Viability相对较小的剔除掉就可以了。</p>
+<a href="https://pic2.zhimg.com/v2-84c340d765f62ce1231f0322c09b90c9_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-84c340d765f62ce1231f0322c09b90c9_r.jpg"></a>
+<p>这样，在之前的演示的植被效果下面，再增加一个HDA节点。生成Species B</p>
+<a href="https://pic3.zhimg.com/80/v2-8dccaf64f95df794d0dafe2f59f3299e_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/80/v2-8dccaf64f95df794d0dafe2f59f3299e_hd.jpg"></a>
+<p>Species B的生成信息如下。</p>
+<a href="https://pic1.zhimg.com/v2-f7109fdae28916a159c9e2af99f1f258_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-f7109fdae28916a159c9e2af99f1f258_r.jpg"></a>
+<a href="https://pic3.zhimg.com/v2-d8d17206cfc14b12763c33ab8de1446e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-d8d17206cfc14b12763c33ab8de1446e_r.jpg"></a>
+<p>这里Species B的Viability值比Species A要高</p>
+<a href="https://pic1.zhimg.com/v2-25ae6a364e651d60b6683da1d07040c4_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-25ae6a364e651d60b6683da1d07040c4_r.jpg"></a>
+<p>这样，Species B和Species A混合在一起后，Species B会把Viability Radius里的Species A剔除掉</p>
+<a href="https://pic1.zhimg.com/v2-d1686fd578e32ab24d8455e6fc4aea8c_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-d1686fd578e32ab24d8455e6fc4aea8c_r.jpg"></a>
+<p>增加密度后，2种植被的布置效果。</p>
+<a href="https://pic3.zhimg.com/v2-5954219de5ea693bd9d1078503a7c332_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-5954219de5ea693bd9d1078503a7c332_r.jpg"></a>
+<p>最后像FC5这样，把地貌的生态环境中的每种特定位置的植被用HDA文件一一描述再串联起来，就可以构成区域复杂的植被体系了。</p>
+<a href="https://pic3.zhimg.com/v2-e6e8f6eacca2dd861a1e5bc0be5e7a9e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-e6e8f6eacca2dd861a1e5bc0be5e7a9e_r.jpg"></a>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这样，就初步实现了FC5的Generate Terrain Entities的基础功能，但欠缺的地方还是很多的。</p>
+<ul>
+<li>Density，Size，Age等参数使用以及规则上，需要去对应最终的游戏世界的尺寸做修改。</li>
+<li>如何更优雅的与UE4的FoliageSystem结合，需要再Houdini Engine里做进一步的扩展</li>
+<li>算法上的调试，优化，也需要基于具体的制作示例来进行</li>
+<li>像Rotation，TerrainData的输出，在之前几节有过介绍，在后文与UE4的整合里也会有进一步的改进。</li>
+<li>在下一节里，在介绍如何使用Generate Terrain Entitie在UE4里制作效果的同时，进一步的优化和改进功能。</li>
+</ul>
+
+
+
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </div></article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2018/07/28/Houdini技术体系 基础管线（四） ：Houdini驱动的UE4植被系统 上篇/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0632.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                TraceYang大佬的Houdini技术体系 基础管线（四） ：Houdini驱动的UE4植被系统 上篇</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2018/07/01/Houdini技术体系 过程化地形系统（一）：Far Cry5的植被系统分析/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0560.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                TraceYang大佬的Houdini技术体系 过程化地形系统（一）：Far Cry5的植被系统分析</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
       
-  <!-- 首页默认取最最新文章集 -->
-  
-    <article class="post post-list" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2019/05/04/Hexo搭建笔记/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "xVx3kXIqz4Dxnd97tu7MW0qP-gzGzoHsz",
+        appKey: "dVp3UAxJPtJLNj0MMBXtiTFE",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <a href="https://zhuanlan.zhihu.com/p/40596375" class="profile gravatar"><img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg" itemprop="image" alt="TraceYang" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="https://zhuanlan.zhihu.com/p/40596375" itemprop="url" rel="author">TraceYang</a>
+            </h3>
+          </div>
         </div>
-        <img width="150" height="150" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0003.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt>
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2019/05/04/Hexo搭建笔记/">
-    Hexo搭建笔记</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2019-5-4</div>
-    <p>
-    个人搭建Hexo时记录的一些笔记</p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2019/05/04/Hexo搭建笔记/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
-
-
-      <div class="clearer">
-      </div>
-    </main>
-    
-  </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
 </div>
 
-<!-- 
-  
-    <article class="post post-list" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2019/05/04/Hexo搭建笔记/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0003.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt>
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2019/05/04/Hexo搭建笔记/">
-    Hexo搭建笔记</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2019-5-4</div>
-    <p>
-    个人搭建Hexo时记录的一些笔记</p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2019/05/04/Hexo搭建笔记/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
 
- -->
+
     </div>    
     <div class="ins-search">
     <div class="ins-search-mask"></div>

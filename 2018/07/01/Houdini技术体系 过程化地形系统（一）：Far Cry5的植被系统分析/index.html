@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">Hexo搭建笔记 | YumeSama</title>
+  <title itemprop="name">TraceYang大佬的Houdini技术体系 过程化地形系统（一）：Far Cry5的植被系统分析 | YumeSama</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -387,23 +387,23 @@
 
   <div class="pattern-center single-center">
     <!-- 有配图默认渲染第一张 -->
-    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0003.jpg);" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0003.jpg">
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0560.jpg);" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0560.jpg">
     </div>
     <header class="pattern-header single-header">
       <h1 class="entry-title">
-      Hexo搭建笔记</h1>
+      TraceYang大佬的Houdini技术体系 过程化地形系统（一）：Far Cry5的植被系统分析</h1>
       <p class="entry-census">
         <span>
-          <a href="https://weibo.com/u/3286893921?is_all=1">
-            <img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/custom/avatar.jpg">
+          <a href="https://zhuanlan.zhihu.com/p/38269483">
+            <img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg">
           </a>
         </span>
         <span>
-          <a href="https://weibo.com/u/3286893921?is_all=1">Yume</a>
+          <a href="https://zhuanlan.zhihu.com/p/38269483">TraceYang</a>
         </span>
         <span class="bull">
         ·</span>
-        2019-5-4<span class="bull">
+        2018-7-1<span class="bull">
         ·</span>
       <span id="busuanzi_value_page_pv"></span>次阅读</p>
     </header>
@@ -417,91 +417,164 @@
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
         <div class="entry-content">
-          <h1 id="Hexo配置主要代码"><a href="#Hexo配置主要代码" class="headerlink" title="Hexo配置主要代码"></a>Hexo配置主要代码</h1><h2 id="1-安装Git、nodejs"><a href="#1-安装Git、nodejs" class="headerlink" title="1. 安装Git、nodejs"></a>1. 安装Git、nodejs</h2><p><a href="https://gitforwindows.org/" target="_blank" rel="noopener">Git下载</a><br><a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">NodeJs下载</a>  </p>
-<h2 id="2-安装hexo"><a href="#2-安装hexo" class="headerlink" title="2.安装hexo"></a>2.安装hexo</h2><p>先创建一个文件夹blog，然后cd到这个文件夹下（或者在这个文件夹下直接右键git bash打开）。<br>输入命令</p>
-<pre><code>npm install -g hexo-cli
-</code></pre><p>接下来初始化一下hexo  </p>
-<pre><code>hexo init myblog
-</code></pre><p>然后  </p>
-<pre><code>cd myblog     //进入这个myblog文件夹  
-npm install   //安装npm
-</code></pre><pre><code>hexo g       //生成
-hexo server  //本地服务器测试，浏览器输入localhost:4000
-</code></pre><h2 id="3-创建个人仓库"><a href="#3-创建个人仓库" class="headerlink" title="3.创建个人仓库"></a>3.创建个人仓库</h2><h2 id="4-生成SSH添加到GitHub"><a href="#4-生成SSH添加到GitHub" class="headerlink" title="4.生成SSH添加到GitHub"></a>4.生成SSH添加到GitHub</h2><pre><code>git config --global user.name &quot;yourname&quot;   //输入Github用户名
-git config --global user.email &quot;youremail&quot; //Github输入邮箱
-git config user.name                       //检查
-git config user.email                      //检查
-ssh-keygen -t rsa -C &quot;youremail&quot;           //创建SSH
-ssh -T git@github.com                      //测试是否成功
-</code></pre><h2 id="5-将hexo部署到GitHub"><a href="#5-将hexo部署到GitHub" class="headerlink" title="5.将hexo部署到GitHub"></a>5.将hexo部署到GitHub</h2><p>修改站点配置文件 _config.yml</p>
-<pre><code>deploy:
-  type: git
-  repo: https://github.com/YourgithubName/YourgithubName.github.io.git
-  branch: master
-</code></pre><p>接着</p>
-<pre><code>npm install hexo-deployer-git --save   //安装deploy-git
-hexo clean                             //清除
-hexo generate                          //生成
-hexo deploy                            //部署
-</code></pre><h2 id="6-设置个人域名"><a href="#6-设置个人域名" class="headerlink" title="6.设置个人域名"></a>6.设置个人域名</h2><p>解析格式：</p>
-<pre><code>CNAME   @   默认   yourname.github.io
-CNAME   www 默认   yourname.github.io
-</code></pre><p>博客文件source中创建一个名为CNAME文件，不要后缀，写上域名。<br>接着</p>
-<pre><code>hexo c                //清除
-hexo g                //生成
-hexo d                //部署
-</code></pre><p>创建新的文章：</p>
-<pre><code>hexo new newpapername
-</code></pre><hr>
-<h1 id="利用分支在多台电脑上操作"><a href="#利用分支在多台电脑上操作" class="headerlink" title="利用分支在多台电脑上操作"></a>利用分支在多台电脑上操作</h1><h2 id="在第一台主机上"><a href="#在第一台主机上" class="headerlink" title="在第一台主机上"></a>在第一台主机上</h2><p>先在主分支下创建一个其他的分支，然后在这个仓库的settings中，修改默认分支。<br>然后再任意目录git bash</p>
-<pre><code>git clone git@github.com:yourname/yourname.github.io.git
-</code></pre><p>除了.git 文件夹外的所有文件都删掉，把之前我们写的博客源文件全部复制过来，除了.deploy_git，将所有.git文件夹删去。<br>接着</p>
-<pre><code>git add .
-git commit –m &quot;balabala&quot;
-git push 
-</code></pre><h2 id="在第二台主机上"><a href="#在第二台主机上" class="headerlink" title="在第二台主机上"></a>在第二台主机上</h2><h3 id="1-安装Git"><a href="#1-安装Git" class="headerlink" title="1.安装Git"></a>1.安装Git</h3><h3 id="2-设置git全局邮箱和用户名"><a href="#2-设置git全局邮箱和用户名" class="headerlink" title="2.设置git全局邮箱和用户名"></a>2.设置git全局邮箱和用户名</h3><h3 id="3-设置ssh-key"><a href="#3-设置ssh-key" class="headerlink" title="3.设置ssh key"></a>3.设置ssh key</h3><h3 id="4-安装nodejs"><a href="#4-安装nodejs" class="headerlink" title="4.安装nodejs"></a>4.安装nodejs</h3><h3 id="5-安装hexo"><a href="#5-安装hexo" class="headerlink" title="5.安装hexo"></a>5.安装hexo</h3><h3 id="6-进入任意文件夹克隆"><a href="#6-进入任意文件夹克隆" class="headerlink" title="6.进入任意文件夹克隆"></a>6.进入任意文件夹克隆</h3><pre><code>git clone git@………………
-</code></pre><p>然后进入克隆到的文件夹：</p>
-<pre><code>cd xxx.github.io
-npm install
-npm install hexo-deployer-git --save
-</code></pre><p>生成，部署：</p>
-<pre><code>hexo g
-hexo d
-</code></pre><p>写博客：</p>
-<pre><code>hexo new newpage
-</code></pre><h1 id="写完了记得提交源文件以便同步"><a href="#写完了记得提交源文件以便同步" class="headerlink" title="写完了记得提交源文件以便同步"></a>写完了记得提交源文件以便同步</h1><pre><code>git add .
-git commit –m &quot;xxxx&quot;
-git push 
-</code></pre><p>回到其他电脑上：</p>
-<pre><code>git pull
-</code></pre><hr>
-<h1 id="作者整合的一些功能"><a href="#作者整合的一些功能" class="headerlink" title="作者整合的一些功能"></a>作者整合的一些功能</h1><h2 id="bilibili外链播放器"><a href="#bilibili外链播放器" class="headerlink" title="bilibili外链播放器"></a>bilibili外链播放器</h2><p>语法：</p>
-<pre><code>{% bili video_id %} 或 {% bili video_id page %}
-</code></pre><p>使用方式:<br>在Hexo博客目录使用npm安装插件</p>
-<pre><code>npm i hexo-tag-bili --save
-</code></pre><p>在Hexo博客的文章或者单页面中使用以下标签语法插入视频</p>
-<pre><code>{% bili video_id %} 或 {% bili video_id page %}
-</code></pre><p>例子:</p>
-<p>如果视频网址如：<a href="https://www.bilibili.com/video/av24897960" target="_blank" rel="noopener">https://www.bilibili.com/video/av24897960</a></p>
-<p>在文章中插入的标签语法为：</p>
-<pre><code>{% bili 24897960 %}
-</code></pre><p>如果视频网址如（第二页）：<a href="https://www.bilibili.com/video/av24897960/?p=2" target="_blank" rel="noopener">https://www.bilibili.com/video/av24897960/?p=2</a></p>
-<p>在文章中插入的标签语法为：</p>
-<pre><code>{% bili 24897960 2 %}
-</code></pre><p>##简易相册<br>语法:</p>
-<pre><code>{% fb_img src [caption] %}
-</code></pre><p>使用方式:<br>在Hexo博客目录使用npm安装插件</p>
-<pre><code>npm i hexo-tag-fancybox_img --save
-</code></pre><p>在Hexo博客的文章或者单页面中使用以下标签语法插入图片以及描述</p>
-<pre><code>{% fb_img src [caption] %}
-</code></pre><p>在主题文件中引入需要的css和js。一般在主题的head中引入css，footer中引入js.(考虑了很久，是不是要直接插件中渲染加入。一是做法灵活度不好，二是有些主题可能会对js等进行优化打包或者以及集成jquery，所以还是手动引入比较合适）  </p>
-<pre><code>&lt;script src=&quot;//code.jquery.com/jquery-3.3.1.min.js&quot;&gt;&lt;/script&gt;
-
-&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.6/dist/jquery.fancybox.min.css&quot; /&gt;
-&lt;script src=&quot;https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.6/dist/jquery.fancybox.min.js&quot;&gt;&lt;/script&gt;
-</code></pre><p>例子:</p>
-<pre><code>{% fb_img https://ws3.sinaimg.cn/large/006bYVyvly1fxxewq3plij30yn0jjkjl.jpg sakura %}
-</code></pre><h1 id="加入live2d"><a href="#加入live2d" class="headerlink" title="加入live2d"></a>加入live2d</h1><p>推荐作者的视频教程:<br><a href="https://www.bilibili.com/video/av24869594?t=412" target="_blank" rel="noopener">手把手教你给hexo博客添加live2d看板娘</a><br><a href="https://www.bilibili.com/video/av40762255" target="_blank" rel="noopener">hexo博客添加live2d看板娘nepgear!</a><br>源文件：<br><a href="https://github.com/honjun/live2d-model" target="_blank" rel="noopener">live2d-model</a><br><a href="https://pan.baidu.com/s/1QqlPfktRPCyDYrYUIx8J0w" target="_blank" rel="noopener">网盘链接</a><br>密码：7rih<br>最后奉上作者的<br><a href="https://github.com/honjun/hexo-theme-sakura/blob/master/README-zh_cn.md" target="_blank" rel="noopener">主题使用教程</a><br><a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/IMG_5840.PNG" data-fancybox="images" data-caption="画师:" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/IMG_5840.PNG"></a></p>
+          <h1 id="查看作者原文"><a href="#查看作者原文" class="headerlink" title="查看作者原文"></a><a href="https://zhuanlan.zhihu.com/p/38269483" target="_blank" rel="noopener">查看作者原文</a></h1><h1 id="Authored-by-TraceYang"><a href="#Authored-by-TraceYang" class="headerlink" title="Authored by TraceYang"></a>Authored by TraceYang</h1><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>在大世界游戏里，植被（biome）是自然环境非常重要的组成部分，虽然UE4里的也有比较不错的地形+植被系统，但相比国外AAA级游戏的效果，还是有不少的差距，简介如下：</p>
+<ul>
+<li>UE4的植被分为（Folige Type）和（Grass Type），都是通过HierarchicalInstancedStaticMeshComponent来进行实例渲染，但生成方式不同<ul>
+<li>Folige Type可以带有碰撞信息，通过Foliage Paint tool或Procedural Foliage Volumes 预先生成和放置，再跟随场景读取时加载。</li>
+<li>Grass Type自己不带碰撞，根据所在的Material Layer和设置预生成密度图，在运行时根据摄像机来生成视野周围的Grass。  </li>
+</ul>
+</li>
+<li>两种方式在摆放上都会有不少的限制<ul>
+<li>当一块地表上出现多种Foliage或Grass时，还是会产生不同类型植被之间的竞争和重叠的情况</li>
+<li>Folige Type在特别是石块，树木，草体都存在的情况下，增减修改都会变的很麻烦</li>
+<li>布局上还是要人为的控制，一旦场景地形要修改，就要重新各种刷新或配置Foliage Type，Grass Type也要跟着刷Material Layer来改变。</li>
+<li>Procedural Foliage Volumes可以一定程度上减少Paint的工作量，但可控的参数过少。</li>
+</ul>
+</li>
+</ul>
+<p>所以植被的过程化系统无论是表现上，性能上，还是迭代的便利性上，都是非常重要的部分。近两年GDC上，Ubisoft在Tom Clancy’s Ghost Recon: Wildlands和Far Cry 5（后简称FC5）的过程化植被生成上都有不错的分享。这里我把Houdini的植被系统实现分为三部分来分享，在基础管线部分主要是Houdini的植被系统与UE4的植被系统如何做衔接，过程化地形部分本节先会分析FC5的实现机制，下一节介绍如何在Houdini和UE4环境下实现类似功能。</p>
+<h1 id="Far-Cry-5的植被系统概述"><a href="#Far-Cry-5的植被系统概述" class="headerlink" title="Far Cry 5的植被系统概述"></a>Far Cry 5的植被系统概述</h1><ul>
+<li>植被的分层结构：每个地块有一个生态组（Main Biome），而主生态组又包含若干的子生态组（Sub Biome）。FC5里把一个Sub Biome结构称为Recipes，每个Recipes由代表不同的区域和种类来命名，比如biome_moutiain_forest，代表的是山上的树林。而一个Recipes里则是若干个Species组成，每个Species代表的是Recipes对应区域和生态里一个植物或物件种类的生成。</li>
+</ul>
+<a href="https://pic2.zhimg.com/80/v2-2b6e1bcbdc1abc0b9b98b8c46f2299e5_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-2b6e1bcbdc1abc0b9b98b8c46f2299e5_hd.jpg"></a>
+<ul>
+<li>Houdini与分层的联系：每个Species其实都是一个Generate Terrain Entities的Houdini HDA节点，把HDA节点一个接一个的连在一起组成Recipes（Sub Biome），而所有的Recipes再连接在一起成为一个Main Biome。每个HDA可以读取地形Mask信息和它的配置参数，输出自己对应的植被的摆放信息，而连在后面的HDA会根据前面HDA留下的信息，通过HDA内置的参数和算法，确定是否会覆盖前一个HDA的生成信息。</li>
+</ul>
+<a href="https://pic2.zhimg.com/80/v2-e21a2132949dddc4e1c56d376f30dca9_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-e21a2132949dddc4e1c56d376f30dca9_hd.jpg"></a>
+<ul>
+<li>地形数据信息：根据地形的高度信息，生成不同的Mask信息，以及用户手绘的数据<ul>
+<li>包括Occlusion，Flow，Slope，Curvature，Illumination等通过高度生成的信息，以及海拔，经纬度，风向等人工输入的信息</li>
+<li>湖泊，道路，栅栏，电线杆，峭壁等其他过程化生成的Mask信息也会被导出保存为2D贴图，确保植被不会生成到这些区域。</li>
+</ul>
+</li>
+</ul>
+<a href="https://pic1.zhimg.com/80/v2-d63fdecd6738158a6f07c354c2eb0a18_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-d63fdecd6738158a6f07c354c2eb0a18_hd.jpg"></a>
+<p>每个Speicies对应的Generate Terrain Entities都是同一个HDA节点，只是根据对应不同植被实体有不同的参数设置，除了实体摆放功能外，还可以根据摆放后的实体信息影响地形并输出到地形数据上，以及定义每个Speicies的生存能力（Viability）：</p>
+<ul>
+<li>Species的Entities功能 ：生成地形上特定种类的实体，包括树，灌木，花草，岩石等等<ul>
+<li>Viability ： 每种物体在根据区域有自己的生存力，以及对应的生存范围和生存优先度，来避免物件之间重叠和穿插。</li>
+<li>Age：树木有自己的Age（年龄），根据Viability生成SDF的来决定。根据Age来控制树的高低。</li>
+<li>Size ： 同一种类的树木有几种不同的Size，小树倾向在外围，大树倾向在中心，同一Size可以这种植被的变化（枯树等）。也可以用Age来替代Viability来控制Size</li>
+<li>Scale：在不同的Size等级之间里通过Scale来平滑过渡。</li>
+<li>Color： 每个植被实例可以根据地形或自身属性来改变的颜色变化，比如通过水体的SDF来控制草体  -  Species的颜色。</li>
+<li>Density：树木密度，可以根据树的大小设置不同密度。</li>
+<li>Rotation：根据地形坡度，水源信息以及风力来改变草体的旋转和方向。</li>
+<li>Transform ： 没有特意讲到，应该就是Transform信息</li>
+<li>Group ： 同样没有特意讲到，可能就是Houdini的Group信息。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>Species的写回Terrain功能 : 布置的资源也可以影响到地形的信息。<ul>
+<li>Terrain Color：地表植被信息可以给予地形贴图一个Tint Color，这个颜色也会通过shader影响到代表上草体的颜色，在地形贴图有限的情况下增加变化。</li>
+<li>Terrain Textures ： 输出树根部分的贴图ID，以及混合系数，配置到Terrain Material的  -    -  Layer Texture上，做到地表和树根的融合效果。</li>
+<li>Terrain Data Output ： 可以把Species的数据包装输出，比如把Age或Viability写入到一个属性，再由后面的Species读取。<br>Terrain Deformation：植被信息会影响到地形HeightMap的变化，比如树根部分会让周围地表隆起。</li>
+</ul>
+</li>
+</ul>
+<p>整个FC5 Biome的核心就是这个名为Generate Terrain Entities的HDA节点。</p>
+<a href="https://pic2.zhimg.com/80/v2-8e6963be44b69ea7c8fc404583755239_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-8e6963be44b69ea7c8fc404583755239_hd.jpg"></a>
+<ul>
+<li>输出到编辑器：所有实体的信息会以Entity Point Cloud的方式输出到引擎编辑器，每个Point除了位置信息属性，还有对应的实体实例引用，以及前面提到的HDA中生成的类似Size，Scale，Color等信息传送到编辑器，编辑器里再根据这些信息在场景里生成对应的资源。</li>
+</ul>
+<a href="https://pic1.zhimg.com/80/v2-248ab64e7ab2bad78823c3ddaf56726c_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-248ab64e7ab2bad78823c3ddaf56726c_hd.jpg"></a>
+<p>所以，要实现FC5类似的植被系统，Houdini和UE4里需要做的功能主要有：</p>
+<ul>
+<li>根据地形的HeightData生成各种Mask信息，以及其他过程化工具生成Mask的回读功能</li>
+<li>类似Generate Terrain Entities里的HDA功能</li>
+<li>HDA所生成的点云和Terrain信息回读到UE4里改变之前的配置<br>本节会先对FC5的文档做需求分析，在下节提供具体的Houdini的实现方法。基础篇里涉及如何在UE4里把HDA输出的数据运用到场景里。</li>
+</ul>
+<h1 id="地形数据生成"><a href="#地形数据生成" class="headerlink" title="地形数据生成"></a>地形数据生成</h1><p>上文提到，过程和生成Biome使用的地形数据主要来源有以下两个部分：</p>
+<ul>
+<li>在Houdini里基于Heightmap生成</li>
+<li>游戏编辑器中输出的2D Mask数据<br>基于Heightmap生成各种特性Mask的功能，在使用WorldMachin做地形时就经常被使用，Houdini作为WM的替代品也有对应的节点。使用这下图这3个节点，或者基于他们的内部实现自己整合一个节点就可以生成Occlusion，Flow，Slope，Curvature，Illumination等信息了。</li>
+</ul>
+<a href="https://pic2.zhimg.com/80/v2-3e48bec3dcb93c216e00073a0fb8f935_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-3e48bec3dcb93c216e00073a0fb8f935_hd.jpg"></a>
+<p>而像在编辑器里过程化生成的湖泊，电线杆等信息，就是设置一个公共的资源目录保存对应的Mask，在每次编辑器里调用过程化工具生成时，使用Python脚本加载对应Mask图，使用Mask By Object节点生根据场景成Mask，再用Python把过程化场景的信息作为Mask保存起来。或者是把每次过程化生成的信息保存，然后在统一Cook时输出Mask信息到2D贴图里。</p>
+<a href="https://pic2.zhimg.com/80/v2-02a34cf2f60ad160d14b619b6031f8ad_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-02a34cf2f60ad160d14b619b6031f8ad_hd.jpg"></a>
+<a href="https://pic1.zhimg.com/v2-e8fabc8023829de5a98cb9ef0d05f214_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-e8fabc8023829de5a98cb9ef0d05f214_r.jpg"></a>
+<a href="https://pic1.zhimg.com/v2-06abec616db4d1d9c121c78cad86f3f0_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-06abec616db4d1d9c121c78cad86f3f0_r.jpg"></a>
+<p>总体来说，地形数据的生成和导入，都是比较成熟技术，没有太大的难度，后面还是聚焦在植被的生成方法上。</p>
+<h1 id="地形的植被实体生成"><a href="#地形的植被实体生成" class="headerlink" title="地形的植被实体生成"></a>地形的植被实体生成</h1><p>下图是FC5的层级结构示意</p>
+<a href="https://pic3.zhimg.com/v2-7a9d9905197b60022c1781549b57762e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-7a9d9905197b60022c1781549b57762e_r.jpg"></a>
+<p>实际整个Main Biome,就像下图这样一个个的代表特定植被的Species的连接在一起。</p>
+<a href="https://pic4.zhimg.com/80/v2-21f38051314e97b23fe7314684b48b13_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/80/v2-21f38051314e97b23fe7314684b48b13_hd.jpg"></a>
+<p>每个Species都是一个Generate Terrain Entiies的HDA节点</p>
+<a href="https://pic2.zhimg.com/v2-0e121b1a264c1fc83ac3a5f75e75ee71_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-0e121b1a264c1fc83ac3a5f75e75ee71_r.jpg"></a>
+<p>接下来通过文档里HDA的截图分析需求。下图是HDA的主面板。</p>
+<a href="https://pic4.zhimg.com/v2-eb334943227eab4d73b620de439275ff_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-eb334943227eab4d73b620de439275ff_r.jpg"></a>
+<p>图上半部分是植被，地形数据列表和显示选项等，生成参数的配置在下半部分，有Entities和Terrain两个页签。里面有摆放植被和输出地形信息的功能。</p>
+<ul>
+<li>Viability<br>Entities页签上首先就是Species的Viability的设置，Main Biome就是大量Species节点串连起来的结果，下图的示例是两个Species串联，Viability的值则是从Terrain Attribute Data里读取的，也就是之前生成和导入的Terrain Mask。下图中SpeciesA的Viability是从Occlusion的mask取值，他的Viability值的倍数为1,而SpeciesB是从Flow Mask里做Viability的取值，Viability的值的倍数为2。并使用Ramp图标来做渐变和裁剪效果。最后途中树木的摆放效果也是因为B的Viability值比A的Viability高，所以Mask重合的部分的B树会替换掉A树。</li>
+</ul>
+<a href="https://pic2.zhimg.com/v2-60426e9682c0060fbd96d1eafad9a6fd_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-60426e9682c0060fbd96d1eafad9a6fd_r.jpg"></a>
+<p>因为SpeciesA和B在树的种类，密度，大小上并不一样，Point Cloud并不会完全重叠在一起，而是类似下图这样的分布关系，所以不能只通过的植被对应的Point的位置信息和Viability来做判断，还需要让每个Entity Point有Viability Radius，下图中，因为B的Viability值比A低，所以当他们的范围有重叠时，B的树就会被A替换掉。</p>
+<a href="https://pic2.zhimg.com/v2-3606ec7927633976eae6b13975a6433d_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-3606ec7927633976eae6b13975a6433d_r.jpg"></a>
+<p>此外，每个Species还有Priority和Priority Radius的设置，计算最终的摆放前，先会用Priority做比较，当Priority一样时再用Viability值做比较。</p>
+<a href="https://pic3.zhimg.com/v2-2cc3040f1e31c3bc492f37aff177ac52_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-2cc3040f1e31c3bc492f37aff177ac52_r.jpg"></a>
+<p>有些植被还有它特定的生存习性，地形数据除了从Heightmap计算或外部读取外，还需要可以人工的在houdini里控制生成范围，再把多个地形数据的混合出结果，例如下图得到就是在一定海拔高度范围内，沿着flow Line生长的植被Mask。也可以把之前编辑器导出或保存的例如湖泊，道路，悬崖等Mask信息导入Specie的地形数据里作为剔除Mask使用，确保植被不会生成到这些不应该生成的位置上。</p>
+<a href="https://pic3.zhimg.com/v2-ebb6a8f4a00a85e57411c84bca1e5cbe_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-ebb6a8f4a00a85e57411c84bca1e5cbe_r.jpg"></a>
+<p>通过在每Species的Terrain Attribute里增加不同的数据来混合，就可以得到类似特定位置的Sub Biomes的生成位置信息了。</p>
+<a href="https://pic4.zhimg.com/v2-7e690195075415dc7eda977ae3ede02b_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-7e690195075415dc7eda977ae3ede02b_r.jpg"></a>
+<ul>
+<li>Size和Scale<br>即便是同一个Species里的同一种植被，因为生长环境和时间的不同，也会有大小（Size）的区分。自然界中，通常小树会长在树林的边缘，而大树更倾向在树林的中央。需要用Size来控制不同生长程度的植被的大小，再使用Scale增加一些随机的变化，让整个森林更加自然。下图增加了5级的Size后，虽然有了一定的变化，但还是会有阶梯状的感觉。</li>
+</ul>
+<a href="https://pic2.zhimg.com/v2-b61446b1c600900b9d918368d7ec44e9_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-b61446b1c600900b9d918368d7ec44e9_r.jpg"></a>
+<p>在Size级别之间增加了Scale后，阶梯感就消失了。</p>
+<a href="https://pic3.zhimg.com/v2-8b17fbabe972c81c222e1d5dea2ecb0e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-8b17fbabe972c81c222e1d5dea2ecb0e_r.jpg"></a>
+<p>使用Size和Scale设置，有了不同比例的同种类树木后，就要想办法把合适大小（Age）树木布置到场景里。</p>
+<ul>
+<li>Age<br>如何在正确的位置摆放对应Size和Scale的植被，是通过让植被的Age与Size对应，来选择摆放多大尺寸的树木。前文也提到，自然的树林是边缘的树龄小，中心的树龄大的分布。通过面板上的Age Max Distance的值，基于Viability的Volume值收缩一定距离后再生成SDF，作为Age使用。再根据Age对Size的Influence和Age Ramp，得到对应树木的Size。</li>
+</ul>
+<a href="https://pic2.zhimg.com/v2-53dfc88959c6b6891b34537c67986ea5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-53dfc88959c6b6891b34537c67986ea5_r.jpg"></a>
+<p>通过Age Ramp对应不同的Size的分布</p>
+<a href="https://pic1.zhimg.com/v2-1c0a044c1ad44e70ab1d74f2c3d3657c_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-1c0a044c1ad44e70ab1d74f2c3d3657c_r.jpg"></a>
+<ul>
+<li>Density<br>通常是使用Houdini的Scatter设置一定的密度值，再将Viability的Mask转为Point Could。但默认的方式转换，每个Point自身没有Size信息，当密度过大，或者Scatter不同Size的植被时，很容易会出现同一种植被相互叠加的情况。所以这里要将Size转算为Density值，Size越大，Density越小。</li>
+</ul>
+<a href="https://pic1.zhimg.com/v2-5fc21b5f9ab342c1a72e2d62974e7ec0_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-5fc21b5f9ab342c1a72e2d62974e7ec0_r.jpg"></a>
+<p>如下图所示，Size越小，Density越大。同时也可以读取其他的Terrain Data来影响Density值。</p>
+<a href="https://pic2.zhimg.com/80/v2-67e223a9e0753e75bede7804d2aacac5_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-67e223a9e0753e75bede7804d2aacac5_hd.jpg"></a>
+<ul>
+<li>Color<br>地形信息也会对植被的颜色产生影响，例如读取水的SDF值，根据颜色的Ramp来对水塘附近的植被产生颜色变化。</li>
+</ul>
+<a href="https://pic4.zhimg.com/80/v2-9c1f97bd9e72f511f5be3ed76714df17_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/80/v2-9c1f97bd9e72f511f5be3ed76714df17_hd.jpg"></a>
+<ul>
+<li>Rotation<br>自然界植被还会受到环境的影响，产生一定的旋转效果。比如在斜坡上的植被会沿着坡度有一定倾斜和旋转，河边的草体会更朝向水的方向，以及会受到风力的影响倾斜等等。这个在Houdini里实现比较简单。</li>
+</ul>
+<a href="https://pic2.zhimg.com/v2-d1437f485b7d97655f4991187d4a2fe1_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-d1437f485b7d97655f4991187d4a2fe1_r.jpg"></a>
+<h1 id="植被对地形的输出"><a href="#植被对地形的输出" class="headerlink" title="植被对地形的输出"></a>植被对地形的输出</h1><p>Species HDA的另外一个功能就是可以根据植被来影响地形数据。这些功能和地形制作部分比较相似。</p>
+<ul>
+<li>Terrain Defromation<br>植被的Mask可以影响到对应地形的高度，这样可以模拟出树根隆起的效果。</li>
+</ul>
+<a href="https://pic1.zhimg.com/v2-37eedb8d450ad86b56ce103dd4b10348_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-37eedb8d450ad86b56ce103dd4b10348_r.jpg"></a>
+<a href="https://pic2.zhimg.com/v2-8f962fb826f339b3f034ee9a66a15495_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-8f962fb826f339b3f034ee9a66a15495_r.jpg"></a>
+<ul>
+<li>Terrain Texture<br>可以将与树根部分贴图对应的Terrain Texture ID输出给地形材质，让地形图层部分使用的贴图与树根贴图对应，而做出融合效果。</li>
+</ul>
+<a href="https://pic2.zhimg.com/v2-57cebdcbea2f120bdb660a999c0665bd_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-57cebdcbea2f120bdb660a999c0665bd_r.jpg"></a>
+<a href="https://pic2.zhimg.com/v2-7b681e76704414ead5b23a992e193ed9_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-7b681e76704414ead5b23a992e193ed9_r.jpg"></a>
+<ul>
+<li>Terrain Data Output：<br>向下图这种在黄松（Ponderosa）周围摆放石块（Rock）的效果，是后面的Rock的Species依赖前面Ponderosa Species的生成结果。</li>
+</ul>
+<a href="https://pic4.zhimg.com/v2-e965ac6547cb17920be8f57fd17a5e53_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-e965ac6547cb17920be8f57fd17a5e53_r.jpg"></a>
+<p>实现方式就是把Ponderosa的viability值输出，再Rock Species里再读取。</p>
+<a href="https://pic2.zhimg.com/80/v2-f4b0c9f71c4c1cc476af5746e8c5f8f1_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-f4b0c9f71c4c1cc476af5746e8c5f8f1_hd.jpg"></a>
+<a href="https://pic2.zhimg.com/v2-936afab0257f1c7be935ceee0c23b5a5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-936afab0257f1c7be935ceee0c23b5a5_r.jpg"></a>
+<p>根据Ponderosa的Viability Mask Scatter得到Rock的Entity Point。</p>
+<a href="https://pic1.zhimg.com/v2-732d81b72645f6a650563a368168e770_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-732d81b72645f6a650563a368168e770_r.jpg"></a>
+<p>除了Viability外，也支持Age的输出。</p>
+<p>FC5的每平方公里的场景有60w左右颗植被。整个游戏有100平方公里。</p>
+<a href="https://pic3.zhimg.com/v2-6ebef5bca04822e28f774bec7b22751a_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-6ebef5bca04822e28f774bec7b22751a_r.jpg"></a>
+<ul>
+<li>Terrain Color<br>由于Terrain Texture总数有限制，需要根据通过地形数据生成Tint Color，在地形渲染时让Tint color作用到Terrain Texture上产生地表变化。</li>
+</ul>
+<a href="https://pic3.zhimg.com/v2-f03174a4cecfc2a1933e90c018458c82_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-f03174a4cecfc2a1933e90c018458c82_r.jpg"></a>
+<p>同样，在地表上摆放的植被的shader，也可以受到Tint color的影响。</p>
+<a href="https://pic1.zhimg.com/80/v2-da51afb521df730607584aa5d0bbdc04_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-da51afb521df730607584aa5d0bbdc04_hd.jpg"></a>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过植被系统输出下图中数据到编辑器，不但可以自动化的生成植，还可以根据植被信息进一步增强地表渲染效果。</p>
+<a href="https://pic1.zhimg.com/80/v2-5781d26e043b45306b537f2ec51cbad4_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-5781d26e043b45306b537f2ec51cbad4_hd.jpg"></a>
+<p>FC5的整个植被系统的需求分析就到这里，除了一些细节功能外，Houdini方面并没有太多的技术难点，下一节，会针对UE4 Houdini Engine对应UE植被系统的管线，以及如何在Houdini里实现相关功能进行展开。</p>
 
 
 
@@ -520,19 +593,36 @@ git push
       <div class="toc" style="background: none;"></div>
       <section class="post-squares nextprev">
         
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2018/07/26/Houdini技术体系 过程化地形系统（二）：基于UE4植被系统（1）/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0562.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                TraceYang大佬的Houdini技术体系 过程化地形系统（二）：基于UE4植被系统（1）</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
         
           
-            <div class="post-nepre full next">
+            <div class="post-nepre half next">
           
-            <a href="/2019/05/03/开篇/" rel="next">
+            <a href="/2018/06/29/Houdini技术体系 基础管线（三） ：UE4 Landscape Component的多选支持 下篇/" rel="next">
               <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/02/897726.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0029.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
               </div>
               <span class="label">
               Next Post</span>
               <div class="info">
                 <h3>
-                开篇</h3>
+                TraceYang大佬的Houdini技术体系 基础管线（三） ：UE4 Landscape Component的多选支持 下篇</h3>
                 <hr>
               </div>
             </a>
@@ -556,16 +646,16 @@ git push
 
       <section class="author-profile">
         <div class="info" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <a href="https://weibo.com/u/3286893921?is_all=1" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/custom/avatar.jpg" itemprop="image" alt="Yume" height="70" width="70"></a>
+          <a href="https://zhuanlan.zhihu.com/p/38269483" class="profile gravatar"><img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg" itemprop="image" alt="TraceYang" height="70" width="70"></a>
           <div class="meta">
             <span class="title">Author</span>
             <h3 itemprop="name">
-            <a href="https://weibo.com/u/3286893921?is_all=1" itemprop="url" rel="author">Yume</a>
+            <a href="https://zhuanlan.zhihu.com/p/38269483" itemprop="url" rel="author">TraceYang</a>
             </h3>
           </div>
         </div>
         <hr>
-        <p><i class="iconfont icon-write"></i>Yume</p>
+        <p><i class="iconfont icon-write"></i></p>
       </section>
     </main><!-- #main -->
   </div><!-- #primary -->

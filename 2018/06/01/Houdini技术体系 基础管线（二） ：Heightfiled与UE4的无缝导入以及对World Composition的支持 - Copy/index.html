@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">Category: 技术 | YumeSama</title>
+  <title itemprop="name">TraceYang大佬的Houdini技术体系 基础管线（二） ：Heightfiled与UE4的无缝导入以及对World Composition的支持 | YumeSama</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -381,104 +381,224 @@
   </div>
 </header>
 
-      
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
 <div class="pattern-center-blank"></div>
-<div class="pattern-center ">
-  <div class="pattern-attachment-img">
-    <img w data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/02/917318.jpg" class="lazyload" onerror="imgError(this,3)" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0007.jpg);" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0007.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      TraceYang大佬的Houdini技术体系 基础管线（二） ：Heightfiled与UE4的无缝导入以及对World Composition的支持</h1>
+      <p class="entry-census">
+        <span>
+          <a href="https://zhuanlan.zhihu.com/p/37575922">
+            <img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="https://zhuanlan.zhihu.com/p/37575922">TraceYang</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2018-6-1<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
   </div>
-  <header class="pattern-header ">
-    <h1 class="cat-title">野生技术协会</h1>
-    <span class="cat-des">
-      <p>Geek – Only for Love</p>
-    </span>
-  </header>
-</div>
+
 <div id="content" class="site-content">
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <h1 id="查看作者原文"><a href="#查看作者原文" class="headerlink" title="查看作者原文"></a><a href="https://zhuanlan.zhihu.com/p/37575922" target="_blank" rel="noopener">查看作者原文</a></h1><h1 id="Authored-by-TraceYang"><a href="#Authored-by-TraceYang" class="headerlink" title="Authored by TraceYang"></a>Authored by TraceYang</h1><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>传统的制作做比较真实大世界3D关卡地形时，通常的采用的方式是把HeightMap和SplatMap（Layer Mask）导入到引擎的地形系统里，生成Terrain LandScape的地形信息和地表材质的图层信息。再由美术在引擎编辑器做进一步的细化工作。而这些Map的生成，是使用WorldMachine（简称WM）软件来制作的。</p>
+<a href="https://pic1.zhimg.com/v2-83fc3f3d66daa598ebaaf325f1f56eb8_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-83fc3f3d66daa598ebaaf325f1f56eb8_r.jpg"></a>  
+<p>图：Ghost Recon Wildlands前期使用WolrdMachine制作的地图</p>
+<a href="https://pic4.zhimg.com/v2-816f19c4792048260d9ed04bd6cb0857_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-816f19c4792048260d9ed04bd6cb0857_r.jpg"></a>  
+<p>图：除了HeightMap之外，SplatMap也是要从World Machine中生成的</p>
+<p>从WorldMachine中Bake出Map后，导入到UE4引擎里，这个教程wiki上比较多，就不多做描述了。</p>
+<a href="https://pic1.zhimg.com/v2-8819f97e3b261671e27dbc3f94e68458_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-8819f97e3b261671e27dbc3f94e68458_r.jpg"></a>  
+<p>图：把Map导入到UE生成的Landscape</p>
+<p>但是传统的WM机制通常会有以下几个问题</p>
+<ul>
+<li>WM里预览的地形生成效果跟DCC软件或游戏引擎相比并不美观，也不能像其他工具里直接由美术参与修改</li>
+<li>WM导入到引擎需要通过导出Heightmap再导入引擎，当地形比较大时，map生成和写入到硬盘的时间会超过10分钟，对美术迭代修改的成本非常大</li>
+<li>WM生成后到引擎后，关卡设计还需要在地形上进行二次开发，从而影响到地形和地表的Map，这时如果需要WM生成部分地形时，整个流程会变的非常混乱。</li>
+</ul>
+<p>像Ubisoft在近年来的大世界项目，Ghost Recon Wildlands和FarCry5如里引入了Houdini Pipeline技术，GDCVault上都有介绍，具体的Heightfield替换WorldMachine的制作，会在地形篇提到，管线章节里就不多做叙述了。这里假设你已经用Houdini的HeightField制作了地形，接下来看下怎么能够快速的通过Houdini Engine快速的导入到游戏编辑器里。</p>
+<h1 id="Houdini-HeightFiled-到UE4-Landscape的无缝生成"><a href="#Houdini-HeightFiled-到UE4-Landscape的无缝生成" class="headerlink" title="Houdini HeightFiled 到UE4 Landscape的无缝生成"></a>Houdini HeightFiled 到UE4 Landscape的无缝生成</h1><p>下图是Houdini HieghtFiled到UE4 Landscape的无缝生成的结果示例，不需要导入贴图，只需把HDA文件拖入到编辑器的Viewport，赋予预制作好的Landscape材质，就可以自动把HDA Cook成UE的landscape资源。 这里假定假定读者已经掌握Landscape Material和Landscape Layer的创建方法，就不多做叙述了。</p>
+<a href="https://pic2.zhimg.com/v2-0ec979a70668fb0ca598a12e59f8bedd_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-0ec979a70668fb0ca598a12e59f8bedd_r.jpg"></a>  
+<a href="https://pic1.zhimg.com/v2-139025330a0521ad3c0f1bec5d0d76c0_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-139025330a0521ad3c0f1bec5d0d76c0_r.jpg"></a>  
+<p>从上面Houdini Engine的机制图可以看到。我们就是通过HDA文件 Houdini HeightFiled的每一个volume的信息转入到UE4里，这里UE4 Houdini Engine Plugin已经实现了功能帮我们做转换。</p>
+<p>首先这里要要让HeightField的Size的设置和最终在UE4里Bake的Landscape Sizes一致。下图是UE官方建议的Landscape的配置。</p>
+<a href="https://pic1.zhimg.com/v2-af9534d8b05bb12717789a226bea8aac_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-af9534d8b05bb12717789a226bea8aac_r.jpg"></a>  
+<p>HDA文件导入到场景后，这里可以看到Landscape 的Component的情况。</p>
+<a href="https://pic3.zhimg.com/v2-a4598117fb8baaea3c7d6ee9796ed7ea_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-a4598117fb8baaea3c7d6ee9796ed7ea_r.jpg"></a>  
+<p>管线介绍部分不会对Heighfiled的制作做太多介绍，用Houdini生成地形信息，通常是用两种途径：</p>
+<h2 id="方法一：使用HeightField-File节点加载一张已有的高度图来生成"><a href="#方法一：使用HeightField-File节点加载一张已有的高度图来生成" class="headerlink" title="方法一：使用HeightField File节点加载一张已有的高度图来生成"></a>方法一：使用HeightField File节点加载一张已有的高度图来生成</h2><a href="https://pic1.zhimg.com/80/v2-d1d14f8d85c9fc5573ae19d3dc908950_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-d1d14f8d85c9fc5573ae19d3dc908950_hd.jpg"></a>
+<p>在HeightField File 节点里可以配置生成到UE4的Landscape的Size</p>
+<a href="https://pic3.zhimg.com/v2-1bd82006369df353b402559457f9707a_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-1bd82006369df353b402559457f9707a_r.jpg"></a>
+<p>而具体的对应的UE Landscape的Overall Resultion，可以使用Heightfiled Resample节点</p>
+<a href="https://pic3.zhimg.com/80/v2-4357ea961d8743776c20e2e4350735a2_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/80/v2-4357ea961d8743776c20e2e4350735a2_hd.jpg"></a>
+<p>而GridSpacing则对应的是他实际在UE4里的Overall Resultion</p>
+<a href="https://pic3.zhimg.com/v2-acd880873fe9cee1971691b0296ecc36_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-acd880873fe9cee1971691b0296ecc36_r.jpg"></a>
+<p>当Heighfiled的Grid Spacing比较大时，说明同样大小的地形，对应的更少的顶点，换算到UE里，就是比较小的Landscape Overall Resultion。 Overall Resultion越小，UE里Landscape生成后的顶点数也会更少一些。这样适合在移动终端用较少的资源做出相对比较大的场景。</p>
+<a href="https://pic1.zhimg.com/80/v2-c868900b0c7dfb00a852f8c57eabf338_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-c868900b0c7dfb00a852f8c57eabf338_hd.jpg"></a>
+<p>下面我做几组Height Field Size与UE Landscape Componment的对比，他们最终在UE里的Landscape szie都是8129x8129。只是细节有所不同。</p>
+<a href="https://pic2.zhimg.com/v2-ecb5436059d80416c87003bb7ebdb521_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-ecb5436059d80416c87003bb7ebdb521_r.jpg"></a>
+<a href="https://pic4.zhimg.com/v2-e1065b4c1f8698df7e93e1b70504438b_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-e1065b4c1f8698df7e93e1b70504438b_r.jpg"></a>
+<a href="https://pic1.zhimg.com/v2-c8a801f6e6760062dd1991d1142c3d20_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-c8a801f6e6760062dd1991d1142c3d20_r.jpg"></a>
+<p>业余学习中我们能把Houdini Engine作为一个黑盒，根据需求来做Size和Grid Spacing的组合来达到想要的目标配置，而真正项目工程里，还是建议由引擎程序根据项目来定制Hengine Engine的Cook Landscape的配置。这个我们在后续的定制更新和修改时也会提到。</p>
+<h2 id="方法二：使用Heightfiled节点从0开始生成："><a href="#方法二：使用Heightfiled节点从0开始生成：" class="headerlink" title="方法二：使用Heightfiled节点从0开始生成："></a>方法二：使用Heightfiled节点从0开始生成：</h2><a href="https://pic2.zhimg.com/80/v2-a1773593fa9401240979beb6a7950085_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-a1773593fa9401240979beb6a7950085_hd.jpg"></a>
+<p>创建这个节点时，就可以选择整个地图的尺寸，其中Size就是为导入到UE4后对应的大小，和方法一一样Grid Spacing来决定Overall Resultion。</p>
+<a href="https://pic2.zhimg.com/v2-31925828bbf80684a549dc3d4fd029ad_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-31925828bbf80684a549dc3d4fd029ad_r.jpg"></a>
+<p>其他的就跟方法一是一样的了。这样，就可以根据机器性能，在场景用较低的几何体生成出相对较大的场景。</p>
+<p>Heightmap的导入解决了，然后就是HeightField Layer Mask与UE4 Landscape Material Layer的对应设置。</p>
+<a href="https://pic2.zhimg.com/80/v2-519123f408ad8d553e61ec2ee257d885_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-519123f408ad8d553e61ec2ee257d885_hd.jpg"></a>
+<p>上图中HDA里HeightFiled的volume信息，height对应的就是HeightMap信息，这个Houdini Engine已经自动支持了，而其他的Layer Mask与UE的Landscape Material Layer，则可以通过命名来一一对应。</p>
+<a href="https://pic2.zhimg.com/v2-817b59c959d45f7602dfc9ee4bb9d75d_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-817b59c959d45f7602dfc9ee4bb9d75d_r.jpg"></a>
+<p>这里我们让HeightField的Layer Name与UE的Landscape Layer Name保持一致。</p>
+<a href="https://pic3.zhimg.com/v2-0c7ac6388002443ffd525ab0b8a0574e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-0c7ac6388002443ffd525ab0b8a0574e_r.jpg"></a>
+<p>左侧的Heithfiled Layer名称和右边UE的Landscape移植，就可以通过Houdini Engine，不导出中间的Map资源，这个过程相比WM的10几分钟要快很多，通常HDA的Cook只要10几秒。</p>
+<p>具体的制作过程可以看附件的HDA事例，这里只介绍几个Houdini关键节点的使用。</p>
+<a href="https://pic3.zhimg.com/v2-b94e4b0e5d5b4314469203dbd57f7d7e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-b94e4b0e5d5b4314469203dbd57f7d7e_r.jpg"></a>
+<a href="https://pic1.zhimg.com/80/v2-d6bdb5941449623ec58f74d57fd87750_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-d6bdb5941449623ec58f74d57fd87750_hd.jpg"></a>
+<p>HeightField Copy Layer的功能就是把你在Houdini里生成的Layer Mask重命名为你想在UE引擎里对应的Landscape Layer的名字。</p>
+<p>这样，我们可以从HDA文件直接生成出带地形高度和地表图层信息的场景了。</p>
+<a href="https://pic4.zhimg.com/v2-fff0bfd87bef9a7fca7624623a83ba8b_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-fff0bfd87bef9a7fca7624623a83ba8b_r.jpg"></a>
+<h1 id="Houdini-HeightFiled-对World-Composition的支持"><a href="#Houdini-HeightFiled-对World-Composition的支持" class="headerlink" title="Houdini HeightFiled 对World Composition的支持"></a>Houdini HeightFiled 对World Composition的支持</h1><p>无缝大世界游戏场景开发中，一个Landscape不管是在多人协作开发，迭代，还是在Streaming的优化以及打包等，诸多方面都会有很多的不便，所以需要我们把一个大世界的Landscape‘Tile化’。比如一个8x8km的Landscpe可能会切成4x4或8x8的Tile。UE也提供了World Composition的功能。</p>
+<a href="https://pic1.zhimg.com/v2-73adcd6f5e912a9c5accb4604dbe2f54_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-73adcd6f5e912a9c5accb4604dbe2f54_r.jpg"></a>
+<p>传统WorldMachine里可以通过Tiled build生成出无缝的Tiled Heightmap和Mask，然后import到UE的Landscape里，这样其实也会增加bake时间，另外把UE4 Landscape的Mask导回给Houdini也是很痛苦的事情（很慢，需要非常大的系统内存）。</p>
+<a href="https://pic1.zhimg.com/v2-0eed6f13ba47a8f9d4b28cc0fe1cb1f0_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-0eed6f13ba47a8f9d4b28cc0fe1cb1f0_r.jpg"></a>
+<p>好在Houdini 16.5版本后，其实对这部分的支持也加强了，Houdini提供了一个heightfield tilesplit节点就可以做Tile化了，这里我切成了4x4个tile。</p>
+<a href="https://pic1.zhimg.com/80/v2-a51e9931b30398d6229412124aba3d20_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-a51e9931b30398d6229412124aba3d20_hd.jpg"></a>
+<a href="https://pic3.zhimg.com/v2-23cffa920be91ed74697dc37537e4542_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-23cffa920be91ed74697dc37537e4542_r.jpg"></a>
+<p>再次把HDA加入场景Cook。就可以生成4x4=16个tile的Landscape了。</p>
+<a href="https://pic2.zhimg.com/v2-6dba08474e9347d3b6eee8d288fb3521_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-6dba08474e9347d3b6eee8d288fb3521_r.jpg"></a>
+<p>但是这个用heightfield tilesplit的方法有他的缺陷，一个是会在tile上产生边缘产生接缝露空。</p>
+<a href="https://pic4.zhimg.com/v2-81e81ac79f3fb9cc603571e674079a27_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-81e81ac79f3fb9cc603571e674079a27_r.jpg"></a>
+<p>而且这种多个Landscape的方式，和UE4的World Composition机制也有冲突。也不能跨Tile来做地形编辑，其实并不是做无缝大世界地图的正确方法。其实World Composition还是一个整体Landscape，通过把LandscapeStreamingProxy分配到每个子关卡的方式，来进行的Tile分割。</p>
+<p>这里提供一个不修改Houdini Engine也能快速的使用World Composition的比较笨的人力办法来解决。</p>
+<p>首先，我们不使用splite节点，直接导入一整张地图进来，这样肯定是没有接缝的。</p>
+<a href="https://pic4.zhimg.com/v2-5a8566ca9a83b63396c4e65e9977f5c3_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-5a8566ca9a83b63396c4e65e9977f5c3_r.jpg"></a>
+<p>然后类似创建出对应个子关卡，这里假定我们生成2x2的。</p>
+<a href="https://pic4.zhimg.com/80/v2-db7f881e274e2409426db976454551bf_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/80/v2-db7f881e274e2409426db976454551bf_hd.jpg"></a>
+<p>接下来，我们选择对应的sublevel，用Move to level工具，就可以把对应的Landscape Component移动到指定的Level里，生成一个LandscapeStreamingProxy</p>
+<a href="https://pic3.zhimg.com/80/v2-a2dcb1e3dbbf2f9ab23e6ac5b914b3be_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/80/v2-a2dcb1e3dbbf2f9ab23e6ac5b914b3be_hd.jpg"></a>
+<a href="https://pic1.zhimg.com/v2-b1039cbf292f7d603c8741d4d3b18b10_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-b1039cbf292f7d603c8741d4d3b18b10_r.jpg"></a>
+<p>最后给每个Level生成对应的LandscapeStreamingProxy。进行保存。</p>
+<a href="https://pic2.zhimg.com/80/v2-75a8fedd6d55a4b0f659dc8357f25f61_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-75a8fedd6d55a4b0f659dc8357f25f61_hd.jpg"></a>
+<p>然后删除掉原始的Landscape，删除之前创建的SubLevel，</p>
+<a href="https://pic4.zhimg.com/80/v2-c0b3bd6dd23d3bc09475a3c34641020b_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/80/v2-c0b3bd6dd23d3bc09475a3c34641020b_hd.jpg"></a>
+<p>勾选Enable World Composition。</p>
+<a href="https://pic1.zhimg.com/80/v2-a1bab31b60024968940196a8f09908c8_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-a1bab31b60024968940196a8f09908c8_hd.jpg"></a>
+<p>UE4就会自动的帮你加载之前的sublevel，生成World Composition。</p>
+<a href="https://pic2.zhimg.com/v2-56b54577adb065aad5605b83ca9607a1_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-56b54577adb065aad5605b83ca9607a1_r.jpg"></a>
+<p>这样就和UE4默认的Import tiled map生成的World Composition是一样的了。</p>
+<p>和前面的地形尺寸对应一样，这里正确的方法其实是要修改Houdini Engine里面的Bake机制，参考Import tiled map里代码的方法，自动的创建关卡和分配Landscape Component，实现整个流程的自动化。否则将来的迭代也会成为问题。</p>
+<h1 id="后续问题"><a href="#后续问题" class="headerlink" title="后续问题"></a>后续问题</h1><p>虽然这里看似Houdini HeightFiled to UE4 Landscape的流程已经打通，但是在实际项目开发中还是会有以下几个问题</p>
+<ul>
+<li>目前流程中Heightfiled还是整体的修改和导入，无法支持Landscape Component和Section的更小级别的增量更新</li>
+<li>还要考虑World Composition的支持，可以自动的从Landscape的某个单元更新到LandscapeStreamingProxy</li>
+<li>后续的基于地形的植被自动生成，山体自动建模等等的生成功能，也是要支持Landscape的最小单元。</li>
+<li>对应手游的硬件的考虑，还需要要能生成不同细节的资源等。</li>
+<li>最重要的，要把这流程做成引擎内的闭环，让开发人员不需要了解Houdini就能UE4里执行和调用功能。</li>
+</ul>
+<p>另外Unity虽然没有提及，但相对实现应该跟UE4类似，而且也可以将Heightfile转换为Terrain Mesh来适配移动设备，这里就不多做介绍了。而上面描述的问题，会在今后的分享中有所解答。关于本文的事例资源会在近期提供一个分享专用的git地址。</p>
+
+
+
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </div></article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2018/06/28/Houdini技术体系 基础管线（三） ：UE4 Landscape Component的方式的地形生成和更新 上篇/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0028.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                TraceYang大佬的Houdini技术体系 基础管线（三） ：UE4 Landscape Component的方式的地形生成和更新 上篇</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2018/05/31/Houdini技术体系 基础管线（一） ：Houdini与Houdini Engine的安装/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0005.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                TraceYang大佬的Houdini技术体系 基础管线（一）：Houdini与Houdini Engine的安装</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
       
-  <!-- 首页默认取最最新文章集 -->
-  
-    <article class="post post-list" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2019/05/04/Hexo搭建笔记/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "xVx3kXIqz4Dxnd97tu7MW0qP-gzGzoHsz",
+        appKey: "dVp3UAxJPtJLNj0MMBXtiTFE",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <a href="https://zhuanlan.zhihu.com/p/37575922" class="profile gravatar"><img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg" itemprop="image" alt="TraceYang" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="https://zhuanlan.zhihu.com/p/37575922" itemprop="url" rel="author">TraceYang</a>
+            </h3>
+          </div>
         </div>
-        <img width="150" height="150" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0003.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt>
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2019/05/04/Hexo搭建笔记/">
-    Hexo搭建笔记</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2019-5-4</div>
-    <p>
-    个人搭建Hexo时记录的一些笔记</p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2019/05/04/Hexo搭建笔记/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
-
-
-      <div class="clearer">
-      </div>
-    </main>
-    
-  </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
 </div>
 
-<!-- 
-  
-    <article class="post post-list" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2019/05/04/Hexo搭建笔记/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0003.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt>
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2019/05/04/Hexo搭建笔记/">
-    Hexo搭建笔记</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2019-5-4</div>
-    <p>
-    个人搭建Hexo时记录的一些笔记</p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2019/05/04/Hexo搭建笔记/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
 
- -->
+
     </div>    
     <div class="ins-search">
     <div class="ins-search-mask"></div>

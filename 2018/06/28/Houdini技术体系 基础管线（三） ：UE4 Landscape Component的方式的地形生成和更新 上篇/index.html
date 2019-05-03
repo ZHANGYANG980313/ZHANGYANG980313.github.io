@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">Hexo搭建笔记 | YumeSama</title>
+  <title itemprop="name">TraceYang大佬的Houdini技术体系 基础管线（三） ：UE4 Landscape Component的方式的地形生成和更新 上篇 | YumeSama</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -387,23 +387,23 @@
 
   <div class="pattern-center single-center">
     <!-- 有配图默认渲染第一张 -->
-    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0003.jpg);" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0003.jpg">
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0028.jpg);" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0028.jpg">
     </div>
     <header class="pattern-header single-header">
       <h1 class="entry-title">
-      Hexo搭建笔记</h1>
+      TraceYang大佬的Houdini技术体系 基础管线（三） ：UE4 Landscape Component的方式的地形生成和更新 上篇</h1>
       <p class="entry-census">
         <span>
-          <a href="https://weibo.com/u/3286893921?is_all=1">
-            <img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/custom/avatar.jpg">
+          <a href="https://zhuanlan.zhihu.com/p/37891783">
+            <img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg">
           </a>
         </span>
         <span>
-          <a href="https://weibo.com/u/3286893921?is_all=1">Yume</a>
+          <a href="https://zhuanlan.zhihu.com/p/37891783">TraceYang</a>
         </span>
         <span class="bull">
         ·</span>
-        2019-5-4<span class="bull">
+        2018-6-28<span class="bull">
         ·</span>
       <span id="busuanzi_value_page_pv"></span>次阅读</p>
     </header>
@@ -417,91 +417,185 @@
         <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
         
         <div class="entry-content">
-          <h1 id="Hexo配置主要代码"><a href="#Hexo配置主要代码" class="headerlink" title="Hexo配置主要代码"></a>Hexo配置主要代码</h1><h2 id="1-安装Git、nodejs"><a href="#1-安装Git、nodejs" class="headerlink" title="1. 安装Git、nodejs"></a>1. 安装Git、nodejs</h2><p><a href="https://gitforwindows.org/" target="_blank" rel="noopener">Git下载</a><br><a href="https://nodejs.org/en/download/" target="_blank" rel="noopener">NodeJs下载</a>  </p>
-<h2 id="2-安装hexo"><a href="#2-安装hexo" class="headerlink" title="2.安装hexo"></a>2.安装hexo</h2><p>先创建一个文件夹blog，然后cd到这个文件夹下（或者在这个文件夹下直接右键git bash打开）。<br>输入命令</p>
-<pre><code>npm install -g hexo-cli
-</code></pre><p>接下来初始化一下hexo  </p>
-<pre><code>hexo init myblog
-</code></pre><p>然后  </p>
-<pre><code>cd myblog     //进入这个myblog文件夹  
-npm install   //安装npm
-</code></pre><pre><code>hexo g       //生成
-hexo server  //本地服务器测试，浏览器输入localhost:4000
-</code></pre><h2 id="3-创建个人仓库"><a href="#3-创建个人仓库" class="headerlink" title="3.创建个人仓库"></a>3.创建个人仓库</h2><h2 id="4-生成SSH添加到GitHub"><a href="#4-生成SSH添加到GitHub" class="headerlink" title="4.生成SSH添加到GitHub"></a>4.生成SSH添加到GitHub</h2><pre><code>git config --global user.name &quot;yourname&quot;   //输入Github用户名
-git config --global user.email &quot;youremail&quot; //Github输入邮箱
-git config user.name                       //检查
-git config user.email                      //检查
-ssh-keygen -t rsa -C &quot;youremail&quot;           //创建SSH
-ssh -T git@github.com                      //测试是否成功
-</code></pre><h2 id="5-将hexo部署到GitHub"><a href="#5-将hexo部署到GitHub" class="headerlink" title="5.将hexo部署到GitHub"></a>5.将hexo部署到GitHub</h2><p>修改站点配置文件 _config.yml</p>
-<pre><code>deploy:
-  type: git
-  repo: https://github.com/YourgithubName/YourgithubName.github.io.git
-  branch: master
-</code></pre><p>接着</p>
-<pre><code>npm install hexo-deployer-git --save   //安装deploy-git
-hexo clean                             //清除
-hexo generate                          //生成
-hexo deploy                            //部署
-</code></pre><h2 id="6-设置个人域名"><a href="#6-设置个人域名" class="headerlink" title="6.设置个人域名"></a>6.设置个人域名</h2><p>解析格式：</p>
-<pre><code>CNAME   @   默认   yourname.github.io
-CNAME   www 默认   yourname.github.io
-</code></pre><p>博客文件source中创建一个名为CNAME文件，不要后缀，写上域名。<br>接着</p>
-<pre><code>hexo c                //清除
-hexo g                //生成
-hexo d                //部署
-</code></pre><p>创建新的文章：</p>
-<pre><code>hexo new newpapername
-</code></pre><hr>
-<h1 id="利用分支在多台电脑上操作"><a href="#利用分支在多台电脑上操作" class="headerlink" title="利用分支在多台电脑上操作"></a>利用分支在多台电脑上操作</h1><h2 id="在第一台主机上"><a href="#在第一台主机上" class="headerlink" title="在第一台主机上"></a>在第一台主机上</h2><p>先在主分支下创建一个其他的分支，然后在这个仓库的settings中，修改默认分支。<br>然后再任意目录git bash</p>
-<pre><code>git clone git@github.com:yourname/yourname.github.io.git
-</code></pre><p>除了.git 文件夹外的所有文件都删掉，把之前我们写的博客源文件全部复制过来，除了.deploy_git，将所有.git文件夹删去。<br>接着</p>
-<pre><code>git add .
-git commit –m &quot;balabala&quot;
-git push 
-</code></pre><h2 id="在第二台主机上"><a href="#在第二台主机上" class="headerlink" title="在第二台主机上"></a>在第二台主机上</h2><h3 id="1-安装Git"><a href="#1-安装Git" class="headerlink" title="1.安装Git"></a>1.安装Git</h3><h3 id="2-设置git全局邮箱和用户名"><a href="#2-设置git全局邮箱和用户名" class="headerlink" title="2.设置git全局邮箱和用户名"></a>2.设置git全局邮箱和用户名</h3><h3 id="3-设置ssh-key"><a href="#3-设置ssh-key" class="headerlink" title="3.设置ssh key"></a>3.设置ssh key</h3><h3 id="4-安装nodejs"><a href="#4-安装nodejs" class="headerlink" title="4.安装nodejs"></a>4.安装nodejs</h3><h3 id="5-安装hexo"><a href="#5-安装hexo" class="headerlink" title="5.安装hexo"></a>5.安装hexo</h3><h3 id="6-进入任意文件夹克隆"><a href="#6-进入任意文件夹克隆" class="headerlink" title="6.进入任意文件夹克隆"></a>6.进入任意文件夹克隆</h3><pre><code>git clone git@………………
-</code></pre><p>然后进入克隆到的文件夹：</p>
-<pre><code>cd xxx.github.io
-npm install
-npm install hexo-deployer-git --save
-</code></pre><p>生成，部署：</p>
-<pre><code>hexo g
-hexo d
-</code></pre><p>写博客：</p>
-<pre><code>hexo new newpage
-</code></pre><h1 id="写完了记得提交源文件以便同步"><a href="#写完了记得提交源文件以便同步" class="headerlink" title="写完了记得提交源文件以便同步"></a>写完了记得提交源文件以便同步</h1><pre><code>git add .
-git commit –m &quot;xxxx&quot;
-git push 
-</code></pre><p>回到其他电脑上：</p>
-<pre><code>git pull
-</code></pre><hr>
-<h1 id="作者整合的一些功能"><a href="#作者整合的一些功能" class="headerlink" title="作者整合的一些功能"></a>作者整合的一些功能</h1><h2 id="bilibili外链播放器"><a href="#bilibili外链播放器" class="headerlink" title="bilibili外链播放器"></a>bilibili外链播放器</h2><p>语法：</p>
-<pre><code>{% bili video_id %} 或 {% bili video_id page %}
-</code></pre><p>使用方式:<br>在Hexo博客目录使用npm安装插件</p>
-<pre><code>npm i hexo-tag-bili --save
-</code></pre><p>在Hexo博客的文章或者单页面中使用以下标签语法插入视频</p>
-<pre><code>{% bili video_id %} 或 {% bili video_id page %}
-</code></pre><p>例子:</p>
-<p>如果视频网址如：<a href="https://www.bilibili.com/video/av24897960" target="_blank" rel="noopener">https://www.bilibili.com/video/av24897960</a></p>
-<p>在文章中插入的标签语法为：</p>
-<pre><code>{% bili 24897960 %}
-</code></pre><p>如果视频网址如（第二页）：<a href="https://www.bilibili.com/video/av24897960/?p=2" target="_blank" rel="noopener">https://www.bilibili.com/video/av24897960/?p=2</a></p>
-<p>在文章中插入的标签语法为：</p>
-<pre><code>{% bili 24897960 2 %}
-</code></pre><p>##简易相册<br>语法:</p>
-<pre><code>{% fb_img src [caption] %}
-</code></pre><p>使用方式:<br>在Hexo博客目录使用npm安装插件</p>
-<pre><code>npm i hexo-tag-fancybox_img --save
-</code></pre><p>在Hexo博客的文章或者单页面中使用以下标签语法插入图片以及描述</p>
-<pre><code>{% fb_img src [caption] %}
-</code></pre><p>在主题文件中引入需要的css和js。一般在主题的head中引入css，footer中引入js.(考虑了很久，是不是要直接插件中渲染加入。一是做法灵活度不好，二是有些主题可能会对js等进行优化打包或者以及集成jquery，所以还是手动引入比较合适）  </p>
-<pre><code>&lt;script src=&quot;//code.jquery.com/jquery-3.3.1.min.js&quot;&gt;&lt;/script&gt;
+          <h1 id="查看作者原文"><a href="#查看作者原文" class="headerlink" title="查看作者原文"></a><a href="https://zhuanlan.zhihu.com/p/37891783" target="_blank" rel="noopener">查看作者原文</a></h1><h1 id="Authored-by-TraceYang"><a href="#Authored-by-TraceYang" class="headerlink" title="Authored by TraceYang"></a>Authored by TraceYang</h1><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>前一节里，解决了Houdini地形无缝导入到UE4的流程问题。但这种方法也有它的局限性，在实际游戏项目里，LA和LD还是偏向在游戏引擎编辑器里工作，他们的一些设计也会影响到地形的信息，那么就需要Houdini对已经导入UE4中并Bake成Landscape的地形资源做二次修改。通常会选择两种方案：</p>
+<ul>
+<li>方案一：把整个地形和建筑都导回到Houdini里，重新过程化和调整生成后，再全部导入回UE4做处理。</li>
+<li>方案二：使用HDA节点的Input和Output，通过调用Houdini Engine API，直接在UE4里完成调用Houdini过程化节点对地形做修改。</li>
+</ul>
+<p>这里方案一不但要求美术和策划对Houdini有一定了解，而且因为Houdini里和引擎的渲染效果不一致。可能还需要导入到UE4里才能看到最终效果，大地形还要做WorldCompositon和LandscapeStreamingProxy的生成。除了地形以外的的场景和建筑部分，还会和GamePlay以及优化显示逻辑相关，通常会包装成BP或Prefab的形式，这些东西要导入Houdini再导回也不仅仅是资源处理的工作。这么看方法一是非常费时费力的方法。这也导致了国内一部分项目虽然是把Houdini的地形引入到制作管线里，但也仅仅是作为WordMachined的替代品，并不能完全发挥Houdini的全部功能。</p>
+<p>所以，我们的目标还是方案二的开发方式，除了第一次在Houdini里做完初始地形导入到UE4里生成WorldCompositon后，就不再需要重新导回到Houdini，而是在UE4里调用预先封装好过程化功能的HDA节点来完成功能。这也是近年来Ubisoft在Tom Clancy’s Ghost Recon: Wildlands和Far Cry 5里使用Houdini的方案。具体案例在GDCVault上有GDC2017和GDC2018的相关视频，这里的目标也是要UE4里用类似他们的方法来实现功能。</p>
+<a href="https://pic1.zhimg.com/v2-e779effed08476578c30954653806fc0_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-e779effed08476578c30954653806fc0_r.jpg"></a>  
+<p>图：Far Cry 5的地形编辑工具示例。可以直接在编辑器里调用Houdini功能对地形做修改。</p>
+<p>但是使用原生的UE4 Houdini Engine的前提下，无缝大地型的UE4内部修改还是会有以下几个问题：</p>
+<ul>
+<li>虽然Houdini Engine支持Landscape的读回到Houdini，但他Output只支持使用回读的Landacape Data信息创建一个新的Landscape：</li>
+<li>每次修改，都要重新跑一遍上节提到的生成WorldCompositon和LandscapeStreamingProxy的过程，重新对地形对切割，还是非常耽误时间</li>
+<li>虽然提供了基于Landscape Component的Input，但Output时每个Component会Cook成一个landscape，导致生成多个Component。</li>
+<li>在原生配置下，即便只处理一部分地形的迭代也必须把整个Landsacape Data通过HDA Input到Houdini来进行处理：<br>假如使用Houdini里读入8x8k的地形，内存占用和过程化处理和交换数据量都会变大，从而导致Cook时间变长，降低迭代的速度。</li>
+<li>不能基于Componment的控制生成范围，那就需要给HDA额外加入一个选择区域的Input，导致美术工作上变的更加繁琐。</li>
+<li>很难在UE里做资源的版本管理，也不方便多人合作地形</li>
+</ul>
+<p>对前面提到的一些概念和方法不了解也没关系，我接下来会用示例还原这些过程，直到最终的目标方案的原型，也就是Far Cry 5的功能效果。</p>
+<a href="https://pic2.zhimg.com/v2-ecc206a1e4fb8e50da0db2ce0c1feed9_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-ecc206a1e4fb8e50da0db2ce0c1feed9_r.jpg"></a>
+<p>图 Far Cry 5 地形编辑器，可以选择一个Terrain的Section或Sector区域来做过程化生成，极大的减小了处理和引擎与Houdini交换的资源量。</p>
+<p>时间和篇幅的缘故，本节会分为上下篇，上半部分主要是在如何修改Houdini Engine源码，可以在UE4里基于Landscape Component进行小规模的迭代迭代的功能，下篇则是实现Houdini Engine管线的基础上，如何制作HDA节点，实现各种不同的编辑效果。</p>
+<h1 id="使用Houdini制作闭环"><a href="#使用Houdini制作闭环" class="headerlink" title="使用Houdini制作闭环"></a>使用Houdini制作闭环</h1><p>本节继续使用上一节的场景资源做作为测试用例，讲解一些HDA Input基础知识，让没有Houdini开发经验的程序人员也能很快接手Houdini Engine的改造。首先创建一个用来开发调试用的HDA节点，它的功能就是可以选中UE4场景里的一个Landscape作为Input，通过Houdini Engine把UE4 Landscape Height Data和Layer Data 转换为Heightfiled Height和Mask Data传入到HDA，在HDA里不做任何处理直接输出原始的Height和Mask,再次经过Houdini Engine生成UE4的Landscape Data。</p>
+<p>下图就是一个Houdini闭环处理地形的流程展示，不需要打开Houdini，在UE4里就能完成闭环的操作。</p>
+<a href="https://pic1.zhimg.com/v2-8f362723d317f315cd6e9bbd7713d8ec_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-8f362723d317f315cd6e9bbd7713d8ec_r.jpg"></a>
+<p>如何创建一个SOP（Surface OPerators or geometry nodes ）类型的Houdini Node Input的流程，Houdini Engine的官方文档里也有讲解 <a href="https://www.sidefx.com/docs/unreal/_inputs.html" target="_blank" rel="noopener">https://www.sidefx.com/docs/unreal/_inputs.html</a></p>
+<p>方法一，Houdini里File-&gt;New Asset，按下图的创建一个新的Operator</p>
+<a href="https://pic3.zhimg.com/v2-af68efb7fae23df2a86cc1877d4fc606_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-af68efb7fae23df2a86cc1877d4fc606_r.jpg"></a>
+<p>方法二 创建一个Gemotry节点，Create Digital Asset，在HDA的Parameter里添加一个Operate Path的参数，把这个参数的与Object_Merge的Object做关联。</p>
+<a href="https://pic2.zhimg.com/v2-711e3ed787a4679296a73637cef6d409_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-711e3ed787a4679296a73637cef6d409_r.jpg"></a>
+<p>不论用这两种哪个方法制作都可以得到这个HDA文件，把它加入到UE资源并拖入到Level的话，按下图那样把Input类型选择为Landscape Input，就可以选择要处理LandscapeStreamingProxy。而勾选上最下面的“Export Selected Landscape Components Only”，就可以把Landscape Component作为Input输入给Houdini。但就像一开始提到的，原生Houdini Engine的这个功能并不能满足我们的需求。</p>
+<a href="https://pic3.zhimg.com/v2-b0d6c5907bcd358319fdffa682a5dc76_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-b0d6c5907bcd358319fdffa682a5dc76_r.jpg"></a>
+<h1 id="基于component的更新的问题"><a href="#基于component的更新的问题" class="headerlink" title="基于component的更新的问题"></a>基于component的更新的问题</h1><p>如下图所示，原生UE4的Landscape的是支持多选Component Selection的，Houdini Engine也是支持多个Landscape Component 的Input。</p>
+<a href="https://pic2.zhimg.com/v2-319fc24cbc5bf43ec023f12b52f60465_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-319fc24cbc5bf43ec023f12b52f60465_r.jpg"></a>
+<p>选择4x4个Component作为要处理的Landscape信息，然后用Recommit看下结果.</p>
+<a href="https://pic3.zhimg.com/v2-b0d6c5907bcd358319fdffa682a5dc76_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-b0d6c5907bcd358319fdffa682a5dc76_r.jpg"></a>
+<p>如下图所示，虽然在效果面上，Houdini Enine把读入的LandScape Data转成HeightField Data 输入给Houdini又没有丝毫误差的的Output后转为LandScape Data，但Houdini Engine把这16个Component创建成了16个Landscape，这明显不是想要的结果。</p>
+<a href="https://pic3.zhimg.com/v2-c0217f69a4e76769f02acc86ec711dea_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-c0217f69a4e76769f02acc86ec711dea_r.jpg"></a>
+<p>另外要注意的是，新创建的Landscape的Transform和老的Landscape的Transform也不一样，这是Houdini和UE4的高度信息单位不同导致，这个问题也会在后面修改Houdini Engine时造成一定的困扰。而且原生的Component多选功能在Height和Mask更新上也会有一些问题。另外预先提到的一点，虽然Houdini Engine的Landscape的更新上有以上各种问题，但类似读取Landscape的信息来动态摆放，生成植物生态系统等不会修改LandscapeData的功能并不会受影响，这个具体的HDA开发也会在下篇里涉及到。</p>
+<a href="https://pic1.zhimg.com/v2-a0d11027dd969aedc7c2d266053bb750_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-a0d11027dd969aedc7c2d266053bb750_r.jpg"></a>
+<p>图：类似FarCry5根据选择地块的Mask信息生成植被的管线，原生的Houdini Engine也是可以胜任的。只需要一些Houdini HDA的功能开发就可以了。</p>
+<h1 id="定制Houdini-Engine支持基于Component的生成和更新"><a href="#定制Houdini-Engine支持基于Component的生成和更新" class="headerlink" title="定制Houdini Engine支持基于Component的生成和更新"></a>定制Houdini Engine支持基于Component的生成和更新</h1><p>因为时间和篇幅关系，这里提供一个不需要修改UE4源码，只少量修改Houdini Engine就可以解决问题的方法，先进入到UE4的Houdini Engine Plugin工程代码里。</p>
+<a href="https://pic1.zhimg.com/v2-60d910eab73c16f4fbe51d6f6857dcf4_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-60d910eab73c16f4fbe51d6f6857dcf4_r.jpg"></a>
+<p>和Landscape相关的功能，是在HoudiniLandscapeUtils和HoudiniEngineUtils里，建议有时间还是全看一遍，这里用注释简单描述下整个数据流程方便定位问题。</p>
+<h1 id="Input部分："><a href="#Input部分：" class="headerlink" title="Input部分："></a>Input部分：</h1><p>调用FHoudiniLandscapeUtils::CreateHeightfieldFromLandscapeComponentArray函数，把选择的Landscape Component的Height Data信息转为Houdini的HeightField Data。</p>
+<pre><code>1. Extracting the height data
 
-&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.6/dist/jquery.fancybox.min.css&quot; /&gt;
-&lt;script src=&quot;https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.6/dist/jquery.fancybox.min.js&quot;&gt;&lt;/script&gt;
-</code></pre><p>例子:</p>
-<pre><code>{% fb_img https://ws3.sinaimg.cn/large/006bYVyvly1fxxewq3plij30yn0jjkjl.jpg sakura %}
-</code></pre><h1 id="加入live2d"><a href="#加入live2d" class="headerlink" title="加入live2d"></a>加入live2d</h1><p>推荐作者的视频教程:<br><a href="https://www.bilibili.com/video/av24869594?t=412" target="_blank" rel="noopener">手把手教你给hexo博客添加live2d看板娘</a><br><a href="https://www.bilibili.com/video/av40762255" target="_blank" rel="noopener">hexo博客添加live2d看板娘nepgear!</a><br>源文件：<br><a href="https://github.com/honjun/live2d-model" target="_blank" rel="noopener">live2d-model</a><br><a href="https://pan.baidu.com/s/1QqlPfktRPCyDYrYUIx8J0w" target="_blank" rel="noopener">网盘链接</a><br>密码：7rih<br>最后奉上作者的<br><a href="https://github.com/honjun/hexo-theme-sakura/blob/master/README-zh_cn.md" target="_blank" rel="noopener">主题使用教程</a><br><a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/IMG_5840.PNG" data-fancybox="images" data-caption="画师:" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/IMG_5840.PNG"></a></p>
+2. Convert the height uint16 data to float
+
+3. Set the HeightfieldData in Houdini
+
+4. Extract and convert all the layers
+
+// 1. Extract the uint8 values from the layer
+
+// 2. Convert unreal uint8 to float
+
+// 3. Set the heighfield data in Houdini
+</code></pre><h1 id="Output部分："><a href="#Output部分：" class="headerlink" title="Output部分："></a>Output部分：</h1><p>当数据在Houdini里处理完成后，调用FHoudiniLandscapeUtils::CreateAllLandscapes基于Houdini的volume数据生成Landscape。</p>
+<pre><code>// First, we need to extract proper height data from FoundVolumes
+
+// Check that all layers/mask have not changed too
+
+// Extract the Float Data from the Heightfield
+
+// Convert the height data from Houdini&#39;s heightfield to Unreal&#39;s Landscape
+
+// Look for all the layers/masks corresponding to the current heightfield
+
+// Extract and convert the Landscape layers
+
+// Create the actual Landscape
+</code></pre><p>定位到FHoudiniLandscapeUtils::CreateLandscape函数里，它的核心功能把转换后的的uint16的Landsacpe的Height信息（TArray&lt; uint16 &gt;&amp; IntHeightData）和Layer信息（TArray&lt; FLandscapeImportLayerInfo &gt;&amp; ImportLayerInfos），通过调用UE4的ALandscapeProxy::Import来生成一个全新的Landscape。</p>
+<p>这里选择的解决方案是不创建新的Landscape，把HeightData和LayerData做适当的封装，直接使用FLandscapeEditDataInterface的SetHeightData和SetAlphaData输入到需要修改的Landscape的对应Component的数据做更新。</p>
+<h1 id="Layer-Data的处理方法"><a href="#Layer-Data的处理方法" class="headerlink" title="Layer Data的处理方法"></a>Layer Data的处理方法</h1><p>为了讲解简单起见，直接在CreateAllLandscapes函数的后面加上这部分功能。其中的Height Layer的更新相对简单，把之前Import用的TArray&lt; FLandscapeImportLayerInfo &gt; ImportLayerInfos的数据对应的用LandscapeEdit.SetAlphaData传给老的Landscape就可以了。</p>
+<pre><code>// Set Layer Data
+for (int32 LayerIndex = 0; LayerIndex &lt; ImportLayerInfos.Num(); LayerIndex++)
+{
+    LandscapeEdit.SetAlphaData(ImportLayerInfos[LayerIndex].LayerInfo, 
+    SelectLandscapeComponent-&gt;GetSectionBase().X, 
+    SelectLandscapeComponent-&gt;GetSectionBase().Y, 
+    SelectLandscapeComponent-&gt;GetSectionBase().X + 
+    SelectLandscapeComponent-&gt;ComponentSizeQuads, 
+    SelectLandscapeComponent-&gt;GetSectionBase().Y + 
+    SelectLandscapeComponent-&gt;ComponentSizeQuads, 
+    (uint8*)ImportLayerInfos[LayerIndex].LayerData.GetData(), 0);
+}
+</code></pre><p>然后选中一个Component，给HDA配置上Landscape材质，以及一个HeightField Mask Noise节点，给地形的Groud信息图层信息增加一些噪声 。</p>
+<a href="https://pic4.zhimg.com/v2-6555fec53c0e9ec96e5dae761fd22ea3_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-6555fec53c0e9ec96e5dae761fd22ea3_r.jpg"></a>
+<p>左边是处理前的效果，右边是增加噪声后的效果。</p>
+<a href="https://pic3.zhimg.com/v2-c98ab665197a0320b4ccc711ccb34a16_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-c98ab665197a0320b4ccc711ccb34a16_r.jpg"></a>
+<p>可以看到，这里已经把Houdini处理过的Height Mask信息写回到了UE4原本的Landscape Layer上，实现了目标的效果。</p>
+<h1 id="Height-Data的处理办法"><a href="#Height-Data的处理办法" class="headerlink" title="Height Data的处理办法"></a>Height Data的处理办法</h1><p>和处理Layer Data的方法类似，把Houdini Engine Output的（TArray&lt; uint16 &gt;&amp; IntHeightData）用LandscapeEdit.SetHeightData函数传回给Landscape Component。</p>
+<pre><code>ULandscapeInfo* LandscapeInfo = 
+SelectLandscapeComponent-&gt;GetLandscapeProxy()-&gt;GetLandscapeInfo();
+FLandscapeEditDataInterface LandscapeEdit(LandscapeInfo);
+
+int Num = IntHeightData.Num();
+for (int i = 0; i &lt; Num; i++)
+{
+    // Convert Transform 
+    IntHeightData[i] = (IntHeightData[i] - ZeroValueInDigit)* 
+    SelectLandscapeScale.Z / OldLandscapeScale.Z + 32768.f;
+}
+// Set HeightData
+LandscapeEdit.SetHeightData(SelectLandscapeComponent-&gt;GetSectionBase().X,
+    SelectLandscapeComponent-&gt;GetSectionBase().Y, 
+    SelectLandscapeComponent-&gt;GetSectionBase().X + 
+    SelectLandscapeComponent-&gt;ComponentSizeQuads , 
+    SelectLandscapeComponent-&gt;GetSectionBase().Y + 
+    SelectLandscapeComponent-&gt;ComponentSizeQuads , 
+     (uint16*)IntHeightData.GetData(), 0, false );
+</code></pre><p>Convert Transform注释部分的处理，是因为经过重新处理后Houdini的Height Field的Data Range和之前的发生了变化，导致ConvertHeightfieldDataToLandscapeData里生成的HeightData和Transform信息和Input时的Transform信息不匹配，ZeroValueInDigit和OldLandscapeScale.Z分别代表了新地形的Transform信息。需要把两个Transform信息的差异对HeigtData做修正，才能把正确的Height Data写回到Landscape。如果你发现写回的地形整体高了一块或低了一块，或者高度比例和原来不一致，那通常就是这个HeightData的还原处理出错了。所以原始的Landscape Transform也要尽量标准，例如本节示例里初始Landscape的Transform就做的尽量正规化</p>
+<a href="https://pic1.zhimg.com/80/v2-a1e77ac3e79b11fc6d814c5eaddc2f84_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-a1e77ac3e79b11fc6d814c5eaddc2f84_hd.jpg"></a>
+<p>看下修改代码后的效果，选择一个Landscape Component地块，在HDA节点里增加一个Heightfiled Noise的节点，对Landscape Height Data做一些轻微的噪声修改：</p>
+<a href="https://pic4.zhimg.com/v2-fc279c68438aa1f97718c4921fb7a237_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-fc279c68438aa1f97718c4921fb7a237_r.jpg"></a>
+<p>左侧是未处理的，右侧是处理完的。可以看到地块有了噪声的高低差的效果</p>
+<a href="https://pic2.zhimg.com/v2-361247ac84e688cb841ec8eadc0ba139_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-361247ac84e688cb841ec8eadc0ba139_r.jpg"></a>
+<p>继续做一个Height Field Erode的测试，用TimeShift来控制Height Field Erode的演算帧数。</p>
+<a href="https://pic4.zhimg.com/80/v2-a1e5377ccddf12792063b785f18e750b_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/80/v2-a1e5377ccddf12792063b785f18e750b_hd.jpg"></a>
+<p>下图结果是TimeShift = 30 和 TimeShift = 60的效果对比。基本上实现了用Houdini Engine对一个Landsape Component的修改功能。但是问题也很明显。处理的Component和未处理的Component的边缘高度无法很好的衔接。距离推上生产线，还有不少功能需要开发和支持。</p>
+<a href="https://pic2.zhimg.com/v2-15b2752b49c7b4285a87984e2ef81f95_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-15b2752b49c7b4285a87984e2ef81f95_r.jpg"></a>
+<p>图：Height Field Erode效果生成，相比整个Landscape的演算，一个Component只要几秒内就能完成效果计算。</p>
+<p>PS: 6月28日补充，在植被系统的预研究，发现了有绘制选取的方式来提交修改区域，比选择Landscape Component更加灵活。就在这里也补充一遍了。</p>
+<p>UE4除了Component Select Tool之外，在Terrain Sculpt Tool里提供Region Selection Tool的功能，这个要比Component Select Tool更加灵活和便捷。但和Component Select Tool一样，这个功能对原生的Houdini Engine并不适用…</p>
+<a href="https://pic3.zhimg.com/v2-2484ff17a5b8852ec2801f7ad37a4a5e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-2484ff17a5b8852ec2801f7ad37a4a5e_r.jpg"></a>
+<p>如上图所示，Region Selection Tool是Terrain Sculpt Tool里的功能，不过可以借用这个功能来作为Input的Mask Paint来使用。接下来看下怎么扩展Houdini Engine把这个Mask作为Input传到Houdini里去。</p>
+<p>Region Selection Tool绘制的Mask的方式，当使用者绘制时，会在FLandscapeToolStrokeMask::Apply函数里根据笔触和权重值，把绘制值添加到class ULandscapeInfo的TMap&lt;FIntPoint,float&gt; SelectedRegion 里的，只有绘制过的区域才会保存在SelectedRegion里，其中FIntPoint代表的是在Landscape里的XY位置信息，作为整型保存，而float为绘制Mask的权重。</p>
+<p>拿到了SelectedRegion后，就是要在Houdini Engine里把它作为Mask，输入到HDA中进行处理。Houdini Engine是在FHoudiniLandscapeUtils::CreateHeightfieldFromLandscapeComponent函数里对Height Data和Mask Data进行Input打包的，这里选择在这个函数里加入SelectedRegion的Mask的打包工作。</p>
+<p>首先，是根据Houdini里一个Landscape Component的大小MaxX x MaxY，创建出对应的SelectedRegion大小的Mask数组。在LandscapeInfo的SelectedRegion里查找每个点的信息，如果有就复制到对应位置，没有则设置为0。这样，提供给Houdini使用的SelectedRegionData就完成了。</p>
+<pre><code>   TArray&lt;float&gt; SelectedRegionData;
+　　for (int32 X = MinX; X &lt;= MaxX; X++)
+　　{
+　　　　　　for (int32 Y = MinY; Y &lt;= MaxY; Y++)
+　　　　　　{
+　　　　　　　　float RegionSelect =  
+　　　　　　　　LandscapeInfo-&gt;SelectedRegion.FindRef(FIntPoint(X, Y));
+　　　　　　　　SelectedRegionData.Add(RegionSelect);
+　　　　　　}
+　　}   
+</code></pre><p>接下里，跟LayerMask同样的方式，通过C++代码创建一个名为SelectedRegion的Mask节点，并跟其他的Volume Merge到一起。</p>
+<pre><code>　　FString LayerName = &quot;SelectedRegion&quot;;
+
+　　HAPI_NodeId LayerVolumeNodeId = -1;
+　　if (!CreateVolumeInputNode(LayerVolumeNodeId, LayerName, ParentId))
+　　　　return false;
+
+　　HAPI_PartId CurrentPartId = 0;
+　　if (!SetHeighfieldData(LayerVolumeNodeId, CurrentPartId, 
+　　　　SelectedRegionData, SelectedRegionLayerVolumeInfo, LayerName, 
+　　　　ComponentIndex))
+　　　　　　return false;
+
+　　if (!CommitVolumeInputNode(LayerVolumeNodeId, InputMergeNodeId, 
+　　　　MergeInputIndex))
+　　　　return false;
+
+　　MergeInputIndex++;       
+</code></pre><p>另外，ULandscapeInfo提供了把绘制的SelectedRegion转为Selected Component的功能，这样绘制过过程化的影响区域后，就不用再选择一次Landscpe Component了。这个修改也很简单，在FHoudiniEngineUtils::HapiCreateInputNodeForLandscape函数里，当没有selected components时，就把绘制的区域转换成SelectedComponents。</p>
+<pre><code>if ( LandscapeInfo )
+{
+　　// Get the currently selected components
+　　SelectedComponents = LandscapeInfo-&gt;GetSelectedComponents();
+　　// 如果没有selected components，则从绘制区域获取selected components
+　　if (SelectedComponents.Num() == 0)
+　　　　SelectedComponents = LandscapeInfo-&gt;GetSelectedRegionComponents();    
+}       
+</code></pre><p>把名为“SelectedRegion”的Mask作为Input输入到HDA后，需要在HDA里对应这个Mask Layer来识别。在HDA的Heightfield Noise节点里，把SelectedRegion作为Mask Layer来使用</p>
+<a href="https://pic3.zhimg.com/v2-18e69b9c9c3d9645a32bff3df0b830f2_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-18e69b9c9c3d9645a32bff3df0b830f2_r.jpg"></a>
+<p>这样HeightField只有在有Mask的部分会有Noise的效果，这个同样也可以用在植被的Entity Point Cloud的生成上。</p>
+<a href="https://pic3.zhimg.com/v2-2d2a0c56394fa631c525d4d18f1fc2b6_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-2d2a0c56394fa631c525d4d18f1fc2b6_r.jpg"></a>
+<p>下图的效果，就是在绘制的’X’的区域内，对9个Landscape Component产生噪声变化。</p>
+<a href="https://pic2.zhimg.com/v2-29a27cd3db0d940bd196199520051db5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-29a27cd3db0d940bd196199520051db5_r.jpg"></a>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Houdini Engine基于Landscape Component的过程化生成，确实可以大幅度的提升生成效率和速度，但是Houdini Engine和HDA制作都还需要一系列的定制开发</p>
+<ul>
+<li>对多选Landscape Component的支持，并且解决多个Component之间的接缝问题。</li>
+<li>Input不能只有Landscape Component来控制范围，还需要为美术提供选区的功能来控制生成范围，避免Component边界问题。</li>
+<li>在下篇中，我们会针对这些问题，继续对Houdini Engine进行定制，以及提供针对不同功能的HDA开发的示例。</li>
+</ul>
 
 
 
@@ -520,19 +614,36 @@ git push
       <div class="toc" style="background: none;"></div>
       <section class="post-squares nextprev">
         
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2018/06/29/Houdini技术体系 基础管线（三） ：UE4 Landscape Component的多选支持 下篇/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0029.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                TraceYang大佬的Houdini技术体系 基础管线（三） ：UE4 Landscape Component的多选支持 下篇</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
         
           
-            <div class="post-nepre full next">
+            <div class="post-nepre half next">
           
-            <a href="/2019/05/03/开篇/" rel="next">
+            <a href="/2018/06/01/Houdini技术体系 基础管线（二） ：Heightfiled与UE4的无缝导入以及对World Composition的支持 - Copy/" rel="next">
               <div class="background">
-                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/02/897726.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0007.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
               </div>
               <span class="label">
               Next Post</span>
               <div class="info">
                 <h3>
-                开篇</h3>
+                TraceYang大佬的Houdini技术体系 基础管线（二） ：Heightfiled与UE4的无缝导入以及对World Composition的支持</h3>
                 <hr>
               </div>
             </a>
@@ -556,16 +667,16 @@ git push
 
       <section class="author-profile">
         <div class="info" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <a href="https://weibo.com/u/3286893921?is_all=1" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/custom/avatar.jpg" itemprop="image" alt="Yume" height="70" width="70"></a>
+          <a href="https://zhuanlan.zhihu.com/p/37891783" class="profile gravatar"><img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg" itemprop="image" alt="TraceYang" height="70" width="70"></a>
           <div class="meta">
             <span class="title">Author</span>
             <h3 itemprop="name">
-            <a href="https://weibo.com/u/3286893921?is_all=1" itemprop="url" rel="author">Yume</a>
+            <a href="https://zhuanlan.zhihu.com/p/37891783" itemprop="url" rel="author">TraceYang</a>
             </h3>
           </div>
         </div>
         <hr>
-        <p><i class="iconfont icon-write"></i>Yume</p>
+        <p><i class="iconfont icon-write"></i></p>
       </section>
     </main><!-- #main -->
   </div><!-- #primary -->

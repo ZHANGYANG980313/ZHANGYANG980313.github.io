@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">Category: 技术 | YumeSama</title>
+  <title itemprop="name">TraceYang大佬的Houdini技术体系 基础管线（三） ：UE4 Landscape Component的多选支持 下篇 | YumeSama</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -381,104 +381,201 @@
   </div>
 </header>
 
-      
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
 <div class="pattern-center-blank"></div>
-<div class="pattern-center ">
-  <div class="pattern-attachment-img">
-    <img w data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/02/917318.jpg" class="lazyload" onerror="imgError(this,3)" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0029.jpg);" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0029.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      TraceYang大佬的Houdini技术体系 基础管线（三） ：UE4 Landscape Component的多选支持 下篇</h1>
+      <p class="entry-census">
+        <span>
+          <a href="https://zhuanlan.zhihu.com/p/38030646">
+            <img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="https://zhuanlan.zhihu.com/p/38030646">TraceYang</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2018-6-29<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
   </div>
-  <header class="pattern-header ">
-    <h1 class="cat-title">野生技术协会</h1>
-    <span class="cat-des">
-      <p>Geek – Only for Love</p>
-    </span>
-  </header>
-</div>
+
 <div id="content" class="site-content">
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <h1 id="查看作者原文"><a href="#查看作者原文" class="headerlink" title="查看作者原文"></a><a href="https://zhuanlan.zhihu.com/p/38030646" target="_blank" rel="noopener">查看作者原文</a></h1><h1 id="Authored-by-TraceYang"><a href="#Authored-by-TraceYang" class="headerlink" title="Authored by TraceYang"></a>Authored by TraceYang</h1><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>上篇中，我们介绍了如何修改Houdini Enigne来设置单个Landscape Compnent的Height和Layer的数据，但原生Houdini Engine并不支持多选Component的写回功能，下篇中，我们来解决这个问题。</p>
+<h1 id="Component多选支持的修改"><a href="#Component多选支持的修改" class="headerlink" title="Component多选支持的修改"></a>Component多选支持的修改</h1><p>Houdini Engine虽然支持多个Landscape Component的选择，但是并不支持写回到Landscape Component，需要自己来实现这个功能。单个Component的实现方法上文已经接受。</p>
+<p>多选和单选区别只是在要把所选的Landscape Component按提交给Houdini的顺序来保存。</p>
+<p>通过阅读Houdini Engine代码可以看到FHoudiniLandscapeUtils::CreateHeightfieldFromLandscapeComponentArray的参数LandscapeComponentArray里有所有提交的Landscape Component，不过LandscapeComponentArray中保存顺序并不是真正的提交顺序，而Houdini Engine Output出来的处理结果的顺序是Input的顺序的是一致的，如果直接用LandscapeComponentArray的结果，就会导致Component的不对应，所以这里我是在FHoudiniLandscapeUtils::CreateHeightfieldFromLandscapeComponent函数里把Input的Component保存起来，也保证了保存顺序。</p>
+<a href="https://pic3.zhimg.com/v2-92dd5e7a63de2d95d3f474608a858f06_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-92dd5e7a63de2d95d3f474608a858f06_r.jpg"></a>  
+<p>然后在FHoudiniLandscapeUtils::CreateAllLandscapes函数中，就可以把每个FoundHeightfield和LandscapeComponent做对应，来调用LandscapeEdit.SetHeightData来更新这个Component的Height Data了。</p>
+<pre><code>  for ( TArray&lt; const FHoudiniGeoPartObject* &gt;::TConstIterator IterHeighfields
+    ( FoundHeightfields ); IterHeighfields; ++IterHeighfields )
+  {
+        SelectLandscapeComponent = 
+        SelectLandscapeComponentArray[ComponentIndex];
+</code></pre><p>而Layer Data的保存方式和Height Data，所有Landscape Component的Layer都保存在一个ImportLayerInfos，比如选了4个Component，每个Component有4个Layer，ImportLayerInfos里就有4x4 16个Layer Data的信息，这里也需要自己按Component和每个Component的Layer数量来提交。下面伪代码，LayerNum为每个Component的Layer的数量，ComponentIndex为处理的Component的编号，而实际开发情况下，可能每个Component的Layer的数量和命名都不一样，那就需要根据规则来定制这里的算法了。</p>
+<pre><code>// Set Current Component&#39;s Layer Data
+for (int32 LayerIndex = LayerNum * ComponentIndex; 
+LayerIndex &lt; LayerNum * (ComponentIndex + 1); LayerIndex++)
+{
+      LandscapeEdit.SetAlphaData
+}
+ComponentIndex++;
+</code></pre><p>这样修改后，Houdini Engine就可以支持多选Landscape Component的Input和Output了。这里使用上节用到HDA文件，选中4个Component做HeightField Noise的生成</p>
+<a href="https://pic1.zhimg.com/80/v2-0c3d708ce42b1314a37876803152f998_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-0c3d708ce42b1314a37876803152f998_hd.jpg"></a>
+<a href="https://pic2.zhimg.com/v2-d57addb8eafc7559ef1f092d87c5c49d_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-d57addb8eafc7559ef1f092d87c5c49d_r.jpg"></a>  
+<p>但结果跟我们预想的并不一样，而且只有第一个Component被做了Noise处理。。。</p>
+<a href="https://pic4.zhimg.com/v2-0d57a4c64c4e19d342bf0c5b0cdf28d7_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-0d57a4c64c4e19d342bf0c5b0cdf28d7_r.jpg"></a>  
+<p>这是UE4原生的Houdini Engine的Input的数据和我们的HDA的处理算法不匹配导致的。</p>
+<h1 id="修改HDA对Input的支持"><a href="#修改HDA对Input的支持" class="headerlink" title="修改HDA对Input的支持"></a>修改HDA对Input的支持</h1><p>造成这个结果的原因，要从Houdini Engine生成Input的函数FHoudiniEngineUtils::HapiCreateInputNodeForLandscape入手：</p>
+<pre><code>// 1. Create the heightfield input node.
+// We&#39;ll use its mergeId to connect all the landscape layers,
+// while it&#39;s displayId will be our connected asset ID
+FString LandscapeName = LandscapeProxy-&gt;GetName() + TEXT(&quot;_Merge&quot;);
+HAPI_NodeId MergeId = -1;
+if ( !FHoudiniLandscapeUtils::CreateHeightfieldInputNode( ConnectedAssetId, MergeId, LandscapeName ) )
+    return false;　
+</code></pre><p>　　这里是通过Houdini Engine，直接创建了一个Houdini的Merge节点，然后把每个Component的Landscape Height Data和Layer Data转为HeightField的Height和Mask Volume，在Merge到一起，也就是用C++代码来生成HDA节点，这样就保证了所有Input的整体处理，而且也可以程序化的去对应不同的Input情况，在后面的章节里，很多Input项目也是要使用C++或Python来生成HDA节点来节省开发成本。下图就是程序生成HDA节点的效果示意：</p>
+<a href="https://pic4.zhimg.com/v2-352f988953a0d96fb2845acea6bd2e17_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-352f988953a0d96fb2845acea6bd2e17_r.jpg"></a>  
+<p>再增加一个Heightfield noise 看下效果：和之前闭环测试效果一样，因为默认的Houdini HeightField节点并不支持这种多个Volume Merge的处理。</p>
+<a href="https://pic2.zhimg.com/v2-0724b19ffa1efd49098be6b4cf5bd40d_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-0724b19ffa1efd49098be6b4cf5bd40d_r.jpg"></a>  
+<p>这里介绍三种解决方法：</p>
+<p>方法一是直接修改或重写HeightField Noise节点来支持整个Merged Volume：</p>
+<a href="https://pic3.zhimg.com/80/v2-85e4f9140ce9e6402adb45d4573282fe_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/80/v2-85e4f9140ce9e6402adb45d4573282fe_hd.jpg"></a>  
+<p>方法二：用Loop处理每个Height Volume</p>
+<a href="https://pic2.zhimg.com/80/v2-99e2abee0511bd0ccea1b625b26eeef5_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-99e2abee0511bd0ccea1b625b26eeef5_hd.jpg"></a>  
+<p>方法三：用tilesplice把Volume合并到一起做处理，然后再用split重新切开</p>
+<a href="https://pic3.zhimg.com/80/v2-24aba578168ccb11540fed7abe1e46f2_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/80/v2-24aba578168ccb11540fed7abe1e46f2_hd.jpg"></a>  
+<p>如果不想自己修改或定制节点的话，方法二和三都可以，感觉方法三还更省事，但方法三有以下几个问题：</p>
+<p>一个是Tile顺序的问题。UE4里的Tile和Houdini的Tile的行列是不同的，同样一个2x2的Compnent，他的Input和Output的顺序有所不同：</p>
+<p>Input Output</p>
+<p>1 2 1 3</p>
+<p>3 4 2 4</p>
+<p>这个需要自己开发功能调整，另外，方法三所选的Component也必须是NxM这种连续的Volume，否则tilesplice节点会像下图这样帮你补齐。所以方法三也有不少的限制。</p>
+<a href="https://pic2.zhimg.com/v2-469eb4b75de65d8af0c14d542c1972d9_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-469eb4b75de65d8af0c14d542c1972d9_r.jpg"></a>  
+<p>如果时间允许，还是自己开发一套Heightfield的节点来定制需要的功能，原生的HeightField系列节点在内存上也有些浪费，限制也比较多，而方法二和三可以作为临时应急方法。</p>
+<h1 id="处理边缘法线问题"><a href="#处理边缘法线问题" class="headerlink" title="处理边缘法线问题"></a>处理边缘法线问题</h1><p>再运行一次HDA处理，2x2的4个Component的节点确实都做了处理，但是在Component边缘有很明显的接缝问题，在World Normal视图下更明显。</p>
+<a href="https://pic3.zhimg.com/v2-acbeb2de5d7ca98ea8a95e924aa67e12_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-acbeb2de5d7ca98ea8a95e924aa67e12_r.jpg"></a>  
+<a href="https://pic4.zhimg.com/v2-ac06fc8d0c8311639b92ae5300cf1e8b_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-ac06fc8d0c8311639b92ae5300cf1e8b_r.jpg"></a>  
+<p>造成法线接缝是Component之间是共享边缘造成的，单个Landscape Component的LandscapeEdit.SetHeightData即便选择计算法线，也会导致边缘因为采样不到旁边Component的顶点，而导致两个Component的不连续，这里我暂时使用了比较暴力的方法，所有的Landscape Comonent 在SetHeightData都不计算法线，而是在最后重新计算整个Landscape的Normal。</p>
+<p>再看下修改后多选Component增加一个HeightField Noise的效果。</p>
+<a href="https://pic2.zhimg.com/v2-497775dcfcc2277b782ee26f07c7870d_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-497775dcfcc2277b782ee26f07c7870d_r.jpg"></a>  
+<a href="https://pic2.zhimg.com/v2-5e6ee30d596d19a80b0db46f34f8c9e5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-5e6ee30d596d19a80b0db46f34f8c9e5_r.jpg"></a>  
+<p>Height Data处理后，就是Layer Data的处理了，这里把HeightField Noise 改成 HeightField Mask Noise，对Landscpae的4个Layer的Mask做噪声处理，和之前Height Data导入时一样，也会有Component之间的接缝问题。</p>
+<a href="https://pic4.zhimg.com/v2-b8e0fc5c90f747ec98342aefc6ae6297_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-b8e0fc5c90f747ec98342aefc6ae6297_r.jpg"></a>  
+<p>这种分割图接缝的问题，以前用WorldMachine做Tile Mask时也经常遇到，也就是Tile边缘之间共享顶点的问题。用WM可以少输出一圈边缘的Map的方法来解决，在UE4里也可以使用类似的方法。</p>
+<a href="https://pic3.zhimg.com/v2-00a7817ff875aebbff37187d9ff4dd56_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-00a7817ff875aebbff37187d9ff4dd56_r.jpg"></a>  
+<p>在调用的LandscapeEdit.SetAlphaData参数上，在SetAlphaData，当到了边缘索引就跳过，就可以不传边缘的Mask Data进去了。</p>
+<pre><code>if(((LayerIndex + 1 ) % XSize) == 0)
+       continue;
+</code></pre><p>再看一下效果，接缝的问题基本上也已经解决了。</p>
+<a href="https://pic1.zhimg.com/v2-4047c3d01747afd906c825b493353dd4_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-4047c3d01747afd906c825b493353dd4_r.jpg"></a>  
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>至此，Houdini技术体系的几个问题的基础解决方案已经完成，后面的文章会逐渐倾向Houdini的地形实际制作部分。</p>
+<a href="https://pic3.zhimg.com/v2-95aec593d228f60da606cd329aada3be_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-95aec593d228f60da606cd329aada3be_r.jpg"></a>  
+<p>而这些技术案例，大多要基于这个闭环+可选组件的方式来实现，随着技术介绍流程，我也会在Github上定制一个类似Far Cry5的UE4 Houdini Engine版本，希望大家多提宝贵意见。</p>
+
+
+
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </div></article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2018/07/01/Houdini技术体系 过程化地形系统（一）：Far Cry5的植被系统分析/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0560.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                TraceYang大佬的Houdini技术体系 过程化地形系统（一）：Far Cry5的植被系统分析</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2018/06/28/Houdini技术体系 基础管线（三） ：UE4 Landscape Component的方式的地形生成和更新 上篇/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0028.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                TraceYang大佬的Houdini技术体系 基础管线（三） ：UE4 Landscape Component的方式的地形生成和更新 上篇</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
       
-  <!-- 首页默认取最最新文章集 -->
-  
-    <article class="post post-list" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2019/05/04/Hexo搭建笔记/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "xVx3kXIqz4Dxnd97tu7MW0qP-gzGzoHsz",
+        appKey: "dVp3UAxJPtJLNj0MMBXtiTFE",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <a href="https://zhuanlan.zhihu.com/p/38030646" class="profile gravatar"><img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg" itemprop="image" alt="TraceYang" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="https://zhuanlan.zhihu.com/p/38030646" itemprop="url" rel="author">TraceYang</a>
+            </h3>
+          </div>
         </div>
-        <img width="150" height="150" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0003.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt>
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2019/05/04/Hexo搭建笔记/">
-    Hexo搭建笔记</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2019-5-4</div>
-    <p>
-    个人搭建Hexo时记录的一些笔记</p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2019/05/04/Hexo搭建笔记/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
-
-
-      <div class="clearer">
-      </div>
-    </main>
-    
-  </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
 </div>
 
-<!-- 
-  
-    <article class="post post-list" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2019/05/04/Hexo搭建笔记/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0003.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt>
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2019/05/04/Hexo搭建笔记/">
-    Hexo搭建笔记</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2019-5-4</div>
-    <p>
-    个人搭建Hexo时记录的一些笔记</p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2019/05/04/Hexo搭建笔记/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
 
- -->
+
     </div>    
     <div class="ins-search">
     <div class="ins-search-mask"></div>

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
   
-  <title itemprop="name">Category: 技术 | YumeSama</title>
+  <title itemprop="name">TraceYang大佬的Houdini技术体系 基础管线（一）：Houdini与Houdini Engine的安装 | YumeSama</title>
   
     <link rel="shortcut icon" href="/images/favicon.ico">
   
@@ -381,104 +381,144 @@
   </div>
 </header>
 
-      
+      <link rel="stylesheet" type="text/css" href="/css/sharejs.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.css">
 <div class="pattern-center-blank"></div>
-<div class="pattern-center ">
-  <div class="pattern-attachment-img">
-    <img w data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/02/917318.jpg" class="lazyload" onerror="imgError(this,3)" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;">
+
+  <div class="pattern-center single-center">
+    <!-- 有配图默认渲染第一张 -->
+    <div class="pattern-attachment-img lazyload" style="background-image: url(https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0005.jpg);" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0005.jpg">
+    </div>
+    <header class="pattern-header single-header">
+      <h1 class="entry-title">
+      TraceYang大佬的Houdini技术体系 基础管线（一）：Houdini与Houdini Engine的安装</h1>
+      <p class="entry-census">
+        <span>
+          <a href="https://zhuanlan.zhihu.com/p/37536419">
+            <img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg">
+          </a>
+        </span>
+        <span>
+          <a href="https://zhuanlan.zhihu.com/p/37536419">TraceYang</a>
+        </span>
+        <span class="bull">
+        ·</span>
+        2018-5-31<span class="bull">
+        ·</span>
+      <span id="busuanzi_value_page_pv"></span>次阅读</p>
+    </header>
   </div>
-  <header class="pattern-header ">
-    <h1 class="cat-title">野生技术协会</h1>
-    <span class="cat-des">
-      <p>Geek – Only for Love</p>
-    </span>
-  </header>
-</div>
+
 <div id="content" class="site-content">
   <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
+      <article id="post-1" class="post-1 post type-post status-publish format-standard has-post-thumbnail hentry category-uncategorized">
+        <div class="toc"></div>
+        <!--<div class="toc-entry-content"><!-- 套嵌目录使用（主要为了支援评论）-->
+        
+        <div class="entry-content">
+          <h1 id="查看作者原文"><a href="#查看作者原文" class="headerlink" title="查看作者原文"></a><a href="https://zhuanlan.zhihu.com/p/37536419" target="_blank" rel="noopener">查看作者原文</a></h1><h1 id="Authored-by-TraceYang"><a href="#Authored-by-TraceYang" class="headerlink" title="Authored by TraceYang"></a>Authored by TraceYang</h1><h1 id="Houdini-下载与安装"><a href="#Houdini-下载与安装" class="headerlink" title="Houdini 下载与安装"></a>Houdini 下载与安装</h1><p>在<a href="https://www.sidefx.com/download/" target="_blank" rel="noopener">官网</a></p>
+<p>下载最新的Production Build 版本，当前是16.5版本，需要注册帐号<br><a href="https://pic1.zhimg.com/v2-5ebdf3ea1a4d41c08686c4a83724cecc_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-5ebdf3ea1a4d41c08686c4a83724cecc_r.jpg"></a><br>PS:公司内网下载还是比较快的，如果是国内网络，下载可能会很慢和不稳定。</p>
+<p>安装一路的默认选择就可以<br><a href="https://pic3.zhimg.com/v2-669c95c4cd336ae28029d4ea7fa329de_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-669c95c4cd336ae28029d4ea7fa329de_r.jpg"></a><br>后面我们需要使用的，让Houdini能够游戏引擎和DCC衔接的Houdini Engine Asset的选择安装，如果自己研究学习，又已经安装好引擎的话，可以勾选上。但正式项目会由程序员自己来维护Houdini Engine Plugin的代码并集成到编辑器。这个后面会讲到。</p>
+<p>安装目录建议就默认目录，然后next到底安装完成<br><a href="https://pic2.zhimg.com/v2-f76c2d6499c58a70a7f003af40a9a061_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-f76c2d6499c58a70a7f003af40a9a061_r.jpg"></a>  </p>
+<h1 id="Houdini-Engine-Plugin安装"><a href="#Houdini-Engine-Plugin安装" class="headerlink" title="Houdini Engine Plugin安装"></a>Houdini Engine Plugin安装</h1><a href="https://pic4.zhimg.com/v2-550cb9ca953e5a45bf3824447b969583_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-550cb9ca953e5a45bf3824447b969583_r.jpg"></a>  
+<p>如上图所示，如果我们需要把Houdini的功能可以直接被引擎调用，还需要安装Houdini Engine Plugin，如果是自己编译ue引擎，那么需要从github上下载对应版本的Houdini Engine Plugin</p>
+<p>连接在这里 <a href="https://github.com/sideeffects/HoudiniEngineForUnreal" target="_blank" rel="noopener">https://github.com/sideeffects/HoudiniEngineForUnreal</a></p>
+<p>下载后解包，把文件夹改名为HoudiniEngine，然后拷贝到Engine\Plugins\Runtime里</p>
+<p>运行GenerateProjectFiles.bat，重新编译引擎，如果看到Houdini Engine的部分是亮的，那就是可以使用了，</p>
+<a href="https://pic1.zhimg.com/80/v2-6e1a7a7cd409be0d51248cfdab3312b8_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-6e1a7a7cd409be0d51248cfdab3312b8_hd.jpg"></a>  
+<p>如果是暗色的，通常会是引擎和Houdini的版本和路径，与HoudiniEngine的默认配置不一致，那就需要自己修改</p>
+<p>打开HoudiniEngineRuntime.Build.cs</p>
+<a href="https://pic4.zhimg.com/v2-feadca460feed7e8cdf1e8040d5ebea7_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-feadca460feed7e8cdf1e8040d5ebea7_r.jpg"></a>  
+<p>按自己安装的Houdini版本和位置HoudiniVersion和HPath就可以了</p>
+
+
+
+        <div style="text-align:center; width: 100%" class="social-share share-mobile" data-disabled="diandian, tencent"></div>
+        <footer class="post-footer">
+          <div class="post-lincenses"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="nofollow"><i class="fa fa-creative-commons" aria-hidden="true"></i> 知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a></div>
+          <div class="post-tags">
+          </div>
+          <div class="post-share">
+            <div class="social-share sharehidden share-component"></div>
+            <i class="iconfont show-share icon-forward"></i>
+          </div>
+        </footer><!-- .entry-footer -->
+      </div></article>
+      <!-- #post-## -->
+      <div class="toc" style="background: none;"></div>
+      <section class="post-squares nextprev">
+        
+          
+            <div class="post-nepre half previous">
+          
+            <a href="/2018/06/01/Houdini技术体系 基础管线（二） ：Heightfiled与UE4的无缝导入以及对World Composition的支持 - Copy/" rel="prev">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0007.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
+              </div>
+              <span class="label">
+              Previous Post</span>
+              <div class="info">
+                <h3>
+                TraceYang大佬的Houdini技术体系 基础管线（二） ：Heightfiled与UE4的无缝导入以及对World Composition的支持</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+        
+          
+            <div class="post-nepre half next">
+          
+            <a href="/2018/05/31/Houdini技术体系大纲/" rel="next">
+              <div class="background">
+                <img class="lazyload" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/img/loader/orange.progress-bar-stripe-loader.svg" data-src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0004.jpg" style="width: 100%; height: 100%; object-fit: cover; pointer-events: none;" onerror="imgError(this,3)">
+              </div>
+              <span class="label">
+              Next Post</span>
+              <div class="info">
+                <h3>
+                TraceYang大佬的Houdini技术体系大纲</h3>
+                <hr>
+              </div>
+            </a>
+          </div>
+        
+      </section>
       
-  <!-- 首页默认取最最新文章集 -->
-  
-    <article class="post post-list" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2019/05/04/Hexo搭建笔记/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
+<div id="vcomments"></div>
+<script>
+  window.onload = function(){
+      var valine = new Valine();
+      valine.init({
+        el: '#vcomments',
+        appId: "xVx3kXIqz4Dxnd97tu7MW0qP-gzGzoHsz",
+        appKey: "dVp3UAxJPtJLNj0MMBXtiTFE",
+        path: window.location.pathname,
+        placeholder: "你是我一生只会遇见一次的惊喜 ..."
+      })
+  }
+</script>
+
+      <section class="author-profile">
+        <div class="info" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <a href="https://zhuanlan.zhihu.com/p/37536419" class="profile gravatar"><img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg" itemprop="image" alt="TraceYang" height="70" width="70"></a>
+          <div class="meta">
+            <span class="title">Author</span>
+            <h3 itemprop="name">
+            <a href="https://zhuanlan.zhihu.com/p/37536419" itemprop="url" rel="author">TraceYang</a>
+            </h3>
+          </div>
         </div>
-        <img width="150" height="150" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0003.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt>
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2019/05/04/Hexo搭建笔记/">
-    Hexo搭建笔记</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2019-5-4</div>
-    <p>
-    个人搭建Hexo时记录的一些笔记</p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2019/05/04/Hexo搭建笔记/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
-
-
-      <div class="clearer">
-      </div>
-    </main>
-    
-  </div>
+        <hr>
+        <p><i class="iconfont icon-write"></i></p>
+      </section>
+    </main><!-- #main -->
+  </div><!-- #primary -->
 </div>
 
-<!-- 
-  
-    <article class="post post-list" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="post-entry">
-    <div class="feature">
-      <a href="/2019/05/04/Hexo搭建笔记/">
-        <div class="overlay">
-          <i class="iconfont icon-text">
-          </i>
-        </div>
-        <img width="150" height="150" src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdn@1.5.1/images/custom/img_0003.jpg" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt>
-      </a>
-    </div>
-    <h1 class="entry-title">
-    <a href="/2019/05/04/Hexo搭建笔记/">
-    Hexo搭建笔记</a>
-    </h1>
-    <div class="p-time">
-      <i class="iconfont icon-time">
-      </i>
-    2019-5-4</div>
-    <p>
-    个人搭建Hexo时记录的一些笔记</p>
-    <footer class="entry-footer">
-      <div class="post-more">
-        <a href="/2019/05/04/Hexo搭建笔记/">
-          <i class="iconfont icon-caidan">
-          </i>
-        </a>
-      </div>
-    </footer>
-  </div>
-  <hr>
-</article>
-  
 
- -->
+
     </div>    
     <div class="ins-search">
     <div class="ins-search-mask"></div>
