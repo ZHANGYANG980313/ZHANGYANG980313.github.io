@@ -395,7 +395,7 @@
       <p class="entry-census">
         <span>
           <a href="https://zhuanlan.zhihu.com/p/38609438">
-            <img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg">
+            <img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg">
           </a>
         </span>
         <span>
@@ -439,13 +439,13 @@
 </ul>
 </li>
 </ul>
-<a href="https://pic4.zhimg.com/v2-ac156ea3b64e54d4d3514e37751c031b_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-ac156ea3b64e54d4d3514e37751c031b_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-ac156ea3b64e54d4d3514e37751c031b_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-ac156ea3b64e54d4d3514e37751c031b_r.jpg"></a> 
 <p>那么，这里就以实现这些需求为目标，介绍下实现基于Houdini的UE4植被系统的基础管线所要注意的事项。</p>
 <h1 id="Houdini的Input设置"><a href="#Houdini的Input设置" class="headerlink" title="Houdini的Input设置"></a>Houdini的Input设置</h1><p>在之前FC5的植被系统的需求分析中也可以得知，最新的AAA游戏中，一平方公里场景里就有60w左右的植被实体，而最近的一些UE4大世界游戏和手游，也通常在6x6~8x8km左右。在策划和美术的迭代开发中，每次都要生成整个场景的植被再看效果的话，会极大的影响开发效率，对大团队的多人协作开发也很不友好。所以这里也要像之前的地形管线一样，以FC5的过程化系统为原型，可以支持美术或策划来选择和绘制生成区域，让Houdini的过程化生成只影响这一部分选择区，这样不但可以利用UE4的WorldComposition的功能多人工作，也可以通过UE4自带的绘制Selection Region Tool，让美术更进一步的控制过程化的影响区域，减少生成时间，提升迭代效率。</p>
 <p>如下图所示，FC5的植被系统，支持类似UE4的Component和Paint Region来作为Terrain Data，</p>
-<a href="https://pic1.zhimg.com/v2-2dc464a1b460a94bd02efa828c48855c_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-2dc464a1b460a94bd02efa828c48855c_r.jpg"></a> 
-<a href="https://pic2.zhimg.com/v2-c96119b03e39655ad6ec2c2ea6dcbb79_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-c96119b03e39655ad6ec2c2ea6dcbb79_r.jpg"></a> 
-<a href="https://pic1.zhimg.com/v2-bfe7fd772a13caa5a66e063dd1dcd304_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-bfe7fd772a13caa5a66e063dd1dcd304_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2dc464a1b460a94bd02efa828c48855c_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2dc464a1b460a94bd02efa828c48855c_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-c96119b03e39655ad6ec2c2ea6dcbb79_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-c96119b03e39655ad6ec2c2ea6dcbb79_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-bfe7fd772a13caa5a66e063dd1dcd304_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-bfe7fd772a13caa5a66e063dd1dcd304_r.jpg"></a> 
 <p>在上文中，也总结到UE4里FC5植被系统的Input，有以下几项：</p>
 <ul>
 <li>所选择Landscape Component部分的地形信息</li>
@@ -454,7 +454,7 @@
 <li>除了HeightMap外的Mask信息，还有峭壁，湖泊，电线杆，栅栏等不能摆放植被的区域Mask</li>
 </ul>
 <p>关于如何确定Input Terrain Data，Landscape Component的选择在地形管线部分已经几次讲到了。幸运的是，UE4除了Component Select Tool之外，在Terrain Sculpt Tool里提供Region Selection Tool的功能，这个要比Component Select Tool更加灵活和便捷。但和Component Select Tool一样，这个功能对原生的Houdini Engine并不适用…</p>
-<a href="https://pic3.zhimg.com/v2-2484ff17a5b8852ec2801f7ad37a4a5e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-2484ff17a5b8852ec2801f7ad37a4a5e_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2484ff17a5b8852ec2801f7ad37a4a5e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2484ff17a5b8852ec2801f7ad37a4a5e_r.jpg"></a> 
 <p>如上图所示，Region Selection Tool是Terrain Sculpt Tool里的功能，不过可以借用这个功能来作为Input的Mask Paint来使用。接下来看下怎么扩展Houdini Engine把这个Mask作为Input传到Houdini里去。</p>
 <p>Region Selection Tool绘制的Mask的方式，当使用者绘制时，会在FLandscapeToolStrokeMask::Apply函数里根据笔触和权重值，把绘制值添加到class ULandscapeInfo的TMap&lt;FIntPoint,float&gt; SelectedRegion 里的，只有绘制过的区域才会保存在SelectedRegion里，其中FIntPoint代表的是在Landscape里的XY位置信息，作为整型保存，而float为绘制Mask的权重。</p>
 <p>拿到了SelectedRegion后，就是要在Houdini Engine里把它作为Mask，输入到HDA中进行处理。Houdini Engine是在FHoudiniLandscapeUtils::CreateHeightfieldFromLandscapeComponent函数里对Height Data和Mask Data进行Input打包的，这里选择在这个函数里加入SelectedRegion的Mask的打包工作。</p>
@@ -497,48 +497,48 @@
 　　　　SelectedComponents = LandscapeInfo-&gt;GetSelectedRegionComponents();    
 }     
 </code></pre><p>把名为“SelectedRegion”的Mask作为Input输入到HDA后，需要在HDA里对应这个Mask Layer来识别。在HDA的Heightfield Noise节点里，把SelectedRegion作为Mask Layer来使用</p>
-<a href="https://pic3.zhimg.com/v2-18e69b9c9c3d9645a32bff3df0b830f2_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-18e69b9c9c3d9645a32bff3df0b830f2_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-18e69b9c9c3d9645a32bff3df0b830f2_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-18e69b9c9c3d9645a32bff3df0b830f2_r.jpg"></a> 
 <p>这样HeightField只有在有Mask的部分会有Noise的效果，这个同样也可以用在植被的Entity Point Cloud的生成上。</p>
-<a href="https://pic3.zhimg.com/v2-2d2a0c56394fa631c525d4d18f1fc2b6_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-2d2a0c56394fa631c525d4d18f1fc2b6_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2d2a0c56394fa631c525d4d18f1fc2b6_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2d2a0c56394fa631c525d4d18f1fc2b6_r.jpg"></a> 
 <p>下图的效果，就是在绘制的’X’的区域内，对9个Landscape Component产生噪声变化。</p>
-<a href="https://pic2.zhimg.com/v2-29a27cd3db0d940bd196199520051db5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-29a27cd3db0d940bd196199520051db5_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-29a27cd3db0d940bd196199520051db5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-29a27cd3db0d940bd196199520051db5_r.jpg"></a> 
 <p>绘制选区通常是控制比较大的区域，而如果是要生成小范围的区域，建议像下图这样用Curve Input来控制区域了。</p>
-<a href="https://pic4.zhimg.com/v2-f9ca63507ef3bf11397bd95f15229663_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-f9ca63507ef3bf11397bd95f15229663_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-f9ca63507ef3bf11397bd95f15229663_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-f9ca63507ef3bf11397bd95f15229663_r.jpg"></a> 
 <p>如何创建一个Curve Input的方法，在Houdini技术体系 基础管线（三） ：UE4以选择区域的方式对地形做生成和更新 上篇 和官方文档 <a href="https://www.sidefx.com/docs/unreal/_curves.html里都有详细介绍，也是有创建SOP或添加Operate" target="_blank" rel="noopener">https://www.sidefx.com/docs/unreal/_curves.html里都有详细介绍，也是有创建SOP或添加Operate</a> Path两种方法。这里就不多做叙述了。</p>
-<a href="https://pic4.zhimg.com/v2-4f9cf8bad27717daa050664aca1109b7_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-4f9cf8bad27717daa050664aca1109b7_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-4f9cf8bad27717daa050664aca1109b7_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-4f9cf8bad27717daa050664aca1109b7_r.jpg"></a> 
 <p>除了HeightData选区外，Input还需要有摆放的UE4植被列表（Biomes List），植被列表通常是用xml，json，或者ue4的datatable来记录每种植被在HDA节点里属性以及在UE4中使用资源的对应关系。然后在HDA里通过Python脚本来加载读取，即便是比下图FC5用例更复杂的HDA节点串联和配置，也可以借助Python自动化，完全摆脱人力基于配置文件自动化的创建和连接。Houdini的Python脚本使用在后续的基础管线部分讲解，本节出于篇幅关系，使用Geometry Input作为简化版的Biome Input。</p>
-<a href="https://pic1.zhimg.com/v2-7ca7f6ba731fafe20fa7a0bf3b103c30_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-7ca7f6ba731fafe20fa7a0bf3b103c30_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-7ca7f6ba731fafe20fa7a0bf3b103c30_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-7ca7f6ba731fafe20fa7a0bf3b103c30_r.jpg"></a> 
 <p>而类似各种像湖泊，峭壁，电线杆等的Mask过程化生成的Mask，这里假设你已经通过其他方式导出了Mask图，或者准备在Houdini里通过Mask By Feature或Mask By Object来生成。在管线部分也就不浪费篇幅了，会在之后具体的地形篇的植被制作部分再做详细介绍。</p>
 <h1 id="HDA的制作以及Ouput的对应"><a href="#HDA的制作以及Ouput的对应" class="headerlink" title="HDA的制作以及Ouput的对应"></a>HDA的制作以及Ouput的对应</h1><p>FC5的HDA的Output分为两大类</p>
 <ul>
 <li>Entity Point Cloud</li>
 <li>Terrain Data<br>基于Input生成Entity Point Cloud的原理非常简单，在去年的在 Houdini HIVE at SIGGRAPH 2017上，Procedural Scattering in Houdini Engine and Unity 的Talk上介绍的就涵盖了全部的基础知识。就如下图所示，根据Terrain，Curve以及资源实体的Inptu，按一定规则在引擎里进行过程化摆放。</li>
 </ul>
-<a href="https://pic4.zhimg.com/v2-92b634268b4577994325299bc780109b_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-92b634268b4577994325299bc780109b_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-92b634268b4577994325299bc780109b_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-92b634268b4577994325299bc780109b_r.jpg"></a> 
 <p>视频链接：<a href="https://vimeo.com/228231127" target="_blank" rel="noopener">https://vimeo.com/228231127</a> ，对应hda的下载地址：<a href="https://www.dropbox.com/s/iv840ldw5tn4lw1/scatter_tool.hda?dl=0" target="_blank" rel="noopener">https://www.dropbox.com/s/iv840ldw5tn4lw1/scatter_tool.hda?dl=0</a> 。虽然跟FC5的实现相比还有不小的差距，在管线篇中作为基础参考绰绰有余，有兴趣的可以下载来看看。这里也借用它简单介绍下使用的相关节点和功能。</p>
 <p>下图中，Setup中的三个Input，分别对应的Terrain Data，Curve Select和Biome Instance。</p>
-<a href="https://pic1.zhimg.com/v2-40ce0e49198ffe7080701de289369cb0_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-40ce0e49198ffe7080701de289369cb0_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-40ce0e49198ffe7080701de289369cb0_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-40ce0e49198ffe7080701de289369cb0_r.jpg"></a> 
 <p>这里先创建个临时的Terrain和Curve来做测试使用。</p>
-<a href="https://pic3.zhimg.com/v2-672144e96e08a407be75c6513b6cafb6_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-672144e96e08a407be75c6513b6cafb6_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-672144e96e08a407be75c6513b6cafb6_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-672144e96e08a407be75c6513b6cafb6_r.jpg"></a> 
 <p>结果就是在Curve选择范围的Terrain上，随机Scatter了一定数量的Entity，这里用红色的Box作为代理体显示。</p>
-<a href="https://pic3.zhimg.com/v2-fb7f1426bd2a4879ea1d847ba5e114fe_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-fb7f1426bd2a4879ea1d847ba5e114fe_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-fb7f1426bd2a4879ea1d847ba5e114fe_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-fb7f1426bd2a4879ea1d847ba5e114fe_r.jpg"></a> 
 <p>这里参数不变，把scatter换成heightfield scatter</p>
-<a href="https://pic3.zhimg.com/v2-6b6d66d064802f1ca7434308ba636b76_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-6b6d66d064802f1ca7434308ba636b76_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-6b6d66d064802f1ca7434308ba636b76_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-6b6d66d064802f1ca7434308ba636b76_r.jpg"></a> 
 <p>这样，只有绘制了Mask的红色区域才会被放置Entity。</p>
-<a href="https://pic4.zhimg.com/v2-0c578fd8766f926cd84576cdc8fd3637_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-0c578fd8766f926cd84576cdc8fd3637_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-0c578fd8766f926cd84576cdc8fd3637_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-0c578fd8766f926cd84576cdc8fd3637_r.jpg"></a> 
 <p>但是示例的这个Scatter Tool也有不适用的地方。首先就是把物体赋予到Entity Point Cloud的Copy节点，并不能对应UE4的Instanced Mesh，这样Output到UE4里的话，每个树木实体都会创建为一个Static mesh，会让过程化生成和最后运行的效率都变得非常差。最好映照按照官方文档的建议，用支持Instance的Copy to Point节点替换掉Copy Stamp节点。</p>
-<a href="https://pic4.zhimg.com/v2-79a281cdcb6966d32583d5a8e8347883_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-79a281cdcb6966d32583d5a8e8347883_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-79a281cdcb6966d32583d5a8e8347883_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-79a281cdcb6966d32583d5a8e8347883_r.jpg"></a> 
 <p>这里根据地形坡度生成mask，然后把Mask转为Point Cloud来摆放树木，来比较Copy to Point节点和Copy Stamp节点的区别。</p>
 <p>这里使用heightfield_mask by feature，取出Slope为20~70范围的Mask。在一块小的地形上生成100颗树来对比下生成效果。</p>
-<a href="https://pic3.zhimg.com/v2-8b45137ec06a4f410900622658b9565a_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-8b45137ec06a4f410900622658b9565a_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-8b45137ec06a4f410900622658b9565a_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-8b45137ec06a4f410900622658b9565a_r.jpg"></a> 
 <p>首先是用Copy Stamp节点，选择好地形和植被实体后，经过20~30秒的卡顿后，有90多个植被生成出来。这个生成的时间和植被数量比，使用体验很难让场景美术接受。</p>
-<a href="https://pic2.zhimg.com/80/v2-beef3f75f89b65a0bce5f64fcb5221c1_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/80/v2-beef3f75f89b65a0bce5f64fcb5221c1_hd.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-beef3f75f89b65a0bce5f64fcb5221c1_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-beef3f75f89b65a0bce5f64fcb5221c1_hd.jpg"></a> 
 <p>不论是Bake成BP还是Actor，所有的树都会被Batch成一个Static Mesh，这样对图形程序做植被渲染优化也非常不友好</p>
-<a href="https://pic1.zhimg.com/v2-d9e05ceeafa7e9619c58e72e88061b3c_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-d9e05ceeafa7e9619c58e72e88061b3c_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-d9e05ceeafa7e9619c58e72e88061b3c_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-d9e05ceeafa7e9619c58e72e88061b3c_r.jpg"></a> 
 <p>和Copy Stamp那20多秒的处理时间相比。。替换为Copy to Point节点，在选择完Input的植被实体和地形后的瞬间（1秒内），几乎没有感觉到任何延迟的，就完成了100颗树木实例的摆放工作。</p>
-<a href="https://pic4.zhimg.com/v2-2e24fe81b6c695f046347dd5b0b645c3_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-2e24fe81b6c695f046347dd5b0b645c3_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2e24fe81b6c695f046347dd5b0b645c3_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2e24fe81b6c695f046347dd5b0b645c3_r.jpg"></a> 
 <p>把植被Bake成一个BP后，可以看到所有的树木被Bake到一个Instanced Static Mesh组件里，而每颗树作为一个Instance保存。也正是因为它采用的Instance的方式，才会有那么快捷的生成速度。这个效率对场景美术迭代来说足够了，但InstancedStaticMesh并不支持LOD模式，用来批量放置的植被实体原有的LOD信息也丢失了。这里应该是创建HierarchicalInstancedStaticMeshComponent才能支持LOD。</p>
-<a href="https://pic2.zhimg.com/v2-7e1dbca897427c1df758076af065444d_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-7e1dbca897427c1df758076af065444d_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-7e1dbca897427c1df758076af065444d_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-7e1dbca897427c1df758076af065444d_r.jpg"></a> 
 <p>如何生成HierarchicalInstancedStaticMeshComponent的Actor或BP，可以参考 void UHoudiniAssetInstanceInputField::AddInstanceComponent( int32 VariationIdx )的函数。当Static Mesh有多个LOD时，Houdini Engine会用HierarchicalInstancedStaticMeshComponent替换Instanced Static Mesh</p>
 <pre><code>UInstancedStaticMeshComponent * InstancedStaticMeshComponent = nullptr;
 if ( StaticMesh-&gt;GetNumLODs() &gt; 1 )
@@ -554,29 +554,29 @@ else
     RootComp-&gt;GetOwner(),UInstancedStaticMeshComponent::StaticClass(), NAME_None, RF_Transactional );
 }
 </code></pre><p>这里保证树的实体有LOD，并且在HDA Input 勾选Export LODs</p>
-<a href="https://pic3.zhimg.com/v2-d3885e7f45586600b55e1cf1ade6516e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-d3885e7f45586600b55e1cf1ade6516e_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-d3885e7f45586600b55e1cf1ade6516e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-d3885e7f45586600b55e1cf1ade6516e_r.jpg"></a> 
 <p>再次Bake，可以看到是HierarchicalInstancedStaticMeshComponent，每个Instance也有之前的LOD信息了。</p>
-<a href="https://pic4.zhimg.com/v2-d8aba831a50fb128f1a8bc356d2c32ab_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-d8aba831a50fb128f1a8bc356d2c32ab_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-d8aba831a50fb128f1a8bc356d2c32ab_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-d8aba831a50fb128f1a8bc356d2c32ab_r.jpg"></a> 
 <p>姑且算是支持了最基础的Entity Cloud Point的Output，但距离实际项目需求还很遥远，就像Input需要支持Biomes List配置表的读取一样，Output出于维护和调试的考虑，最好也是能支持Biomes List的输出，而且，虽然提供给场景美术绘制影响区域的功能，但BP的保存方式，对Houdini的闭环迭代也并不足够的友好，当美术需要对一些细小地区做频繁迭代时，新生成的植被如何去替换BP里已经生成植被也是个问题，解决方法只能整个BP对应区域重新生成一次。这需要美术在设计初期就对植被布局策略和种类考虑清楚。还有就是UE4除了Foliage Type外，还有Grass Type的植被的支持。这些会放在之后如何UE4植被系统整合的部分来讲解。</p>
 <p>FC5的植被系统除了Entity Cloud Point之外，还有以下的Terrain Data的Output。</p>
-<a href="https://pic4.zhimg.com/v2-0f786e9f5541c849c372dd0e539a00b3_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-0f786e9f5541c849c372dd0e539a00b3_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-0f786e9f5541c849c372dd0e539a00b3_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-0f786e9f5541c849c372dd0e539a00b3_r.jpg"></a> 
 <p>其中Terrain HeightMap和Forest Mask，都可以通过之前地形管线中介绍的方法传递给UE4，而Texture ID，因为FC5的地形渲染有TextureArray支持，而UE4则受限于每个Component4个Landscape Layer的限制，所以Layer与Texture的对应又是在Mateiral里绑定的，需要修改UE4引擎源码才能支持，但这就超出Houdini技术体系范畴了。这里介绍一个临时的折中办法，通过直接去修改约定好的对应的Layer的Mask权重的方式，来实现UE4里要根据输出的Houdini Output的去改变Layer的Texture ID的需求。</p>
 <p>首先，用RegionTool绘制一块区域来生成植被</p>
-<a href="https://pic4.zhimg.com/v2-f7fb292bfe5a7db67636a02c076c7f87_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-f7fb292bfe5a7db67636a02c076c7f87_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-f7fb292bfe5a7db67636a02c076c7f87_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-f7fb292bfe5a7db67636a02c076c7f87_r.jpg"></a> 
 <p>这里就只简单的根据绘制的Mask部分Scatter生成Point Cloud，效果如下</p>
-<a href="https://pic3.zhimg.com/v2-963d55e4e2e7a8f0095e35d0a5529fae_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-963d55e4e2e7a8f0095e35d0a5529fae_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-963d55e4e2e7a8f0095e35d0a5529fae_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-963d55e4e2e7a8f0095e35d0a5529fae_r.jpg"></a> 
 <p>接下来实现一下Terrain Data的Output的功能，不论是Terrain Texture还是Terrain Deformation的输出原理上都是在植被一定范围内生成Mask，再把这个Mask转化为Layer Data或者Height Data，传递给UE4。</p>
-<a href="https://pic3.zhimg.com/v2-0267647576a715b406ecef3050311c76_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-0267647576a715b406ecef3050311c76_r.jpg"></a> 
-<a href="https://pic3.zhimg.com/v2-118cf99886fca2c0e79169f432ad8a02_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-118cf99886fca2c0e79169f432ad8a02_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-0267647576a715b406ecef3050311c76_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-0267647576a715b406ecef3050311c76_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-118cf99886fca2c0e79169f432ad8a02_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-118cf99886fca2c0e79169f432ad8a02_r.jpg"></a> 
 <p>出于跑通管线的目的，这里在HDA里做一个简单的实现。在houdini里根据Scatter生成的Point Cloud，使用Sphere来生成出Mask，再根据这个Mask来提升地形高度，并把Mask输出位树根部所对应的Landscape Material Layer的值。</p>
-<a href="https://pic3.zhimg.com/v2-98bec4ce24e70139c3f29fd70cf5faee_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-98bec4ce24e70139c3f29fd70cf5faee_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-98bec4ce24e70139c3f29fd70cf5faee_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-98bec4ce24e70139c3f29fd70cf5faee_r.jpg"></a> 
 <p>在测试场景上选择一个生成区域</p>
-<a href="https://pic3.zhimg.com/v2-9b712e7795926750e1e1210d77e3c386_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-9b712e7795926750e1e1210d77e3c386_r.jpg"></a> 
-<a href="https://pic3.zhimg.com/v2-44b481930be6958577e6b81f878c054a_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-44b481930be6958577e6b81f878c054a_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-9b712e7795926750e1e1210d77e3c386_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-9b712e7795926750e1e1210d77e3c386_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-44b481930be6958577e6b81f878c054a_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-44b481930be6958577e6b81f878c054a_r.jpg"></a> 
 <p>有摆放植被的周围地形改为了另外一种Layer。</p>
-<a href="https://pic1.zhimg.com/v2-69e8894844addd134eac06b4a2d57600_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-69e8894844addd134eac06b4a2d57600_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-69e8894844addd134eac06b4a2d57600_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-69e8894844addd134eac06b4a2d57600_r.jpg"></a> 
 <p>树根附近的地表高度也被提升了。和FC5那种按照树根形状来提升高度的效果相比还是有差距。</p>
-<a href="https://pic3.zhimg.com/v2-720487960e43dc2185538a6f03dc1636_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-720487960e43dc2185538a6f03dc1636_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-720487960e43dc2185538a6f03dc1636_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-720487960e43dc2185538a6f03dc1636_r.jpg"></a> 
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>上篇中，简单的介绍了如何在UE4里实现类似FC5植被系统的管线，但还有问题等待解决</p>
 <p>虽然植被实体可以被Bake为HierarchicalInstancedStaticMeshComponent或InstancedStaticMeshComponent来近似UE4Foliage Type的渲染方式，但并不支持GrassType的类型。<br>Point Cloud生成的植被只能Bake为场景中的Actor或BP而不是Foliage Type，并不能与UE4的Foliage System融合，在迭代和修改中增加了额外的负担。<br>示例中的HDA只支持1种植被，生成策略也非常简单，而且也不支持BiomeList的读取，和FC5有相当大的差距。</p>
 <p>对于前两点，会在Houdini驱动的UE4植被系统 下篇中有进一步解决方案的介绍，只有整条UE4的植被基础管线完成后，才能把鱼FC5近似的Houdini功能集成到UE4里，这部分HDA的制作会在地形系统篇中进行具体讲解。</p>
@@ -651,7 +651,7 @@ else
 
       <section class="author-profile">
         <div class="info" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <a href="https://zhuanlan.zhihu.com/p/38609438" class="profile gravatar"><img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg" itemprop="image" alt="TraceYang" height="70" width="70"></a>
+          <a href="https://zhuanlan.zhihu.com/p/38609438" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg" itemprop="image" alt="TraceYang" height="70" width="70"></a>
           <div class="meta">
             <span class="title">Author</span>
             <h3 itemprop="name">

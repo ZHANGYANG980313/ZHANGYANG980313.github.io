@@ -395,7 +395,7 @@
       <p class="entry-census">
         <span>
           <a href="https://zhuanlan.zhihu.com/p/37891783">
-            <img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg">
+            <img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg">
           </a>
         </span>
         <span>
@@ -424,7 +424,7 @@
 </ul>
 <p>这里方案一不但要求美术和策划对Houdini有一定了解，而且因为Houdini里和引擎的渲染效果不一致。可能还需要导入到UE4里才能看到最终效果，大地形还要做WorldCompositon和LandscapeStreamingProxy的生成。除了地形以外的的场景和建筑部分，还会和GamePlay以及优化显示逻辑相关，通常会包装成BP或Prefab的形式，这些东西要导入Houdini再导回也不仅仅是资源处理的工作。这么看方法一是非常费时费力的方法。这也导致了国内一部分项目虽然是把Houdini的地形引入到制作管线里，但也仅仅是作为WordMachined的替代品，并不能完全发挥Houdini的全部功能。</p>
 <p>所以，我们的目标还是方案二的开发方式，除了第一次在Houdini里做完初始地形导入到UE4里生成WorldCompositon后，就不再需要重新导回到Houdini，而是在UE4里调用预先封装好过程化功能的HDA节点来完成功能。这也是近年来Ubisoft在Tom Clancy’s Ghost Recon: Wildlands和Far Cry 5里使用Houdini的方案。具体案例在GDCVault上有GDC2017和GDC2018的相关视频，这里的目标也是要UE4里用类似他们的方法来实现功能。</p>
-<a href="https://pic1.zhimg.com/v2-e779effed08476578c30954653806fc0_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-e779effed08476578c30954653806fc0_r.jpg"></a>  
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-e779effed08476578c30954653806fc0_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-e779effed08476578c30954653806fc0_r.jpg"></a>  
 <p>图：Far Cry 5的地形编辑工具示例。可以直接在编辑器里调用Houdini功能对地形做修改。</p>
 <p>但是使用原生的UE4 Houdini Engine的前提下，无缝大地型的UE4内部修改还是会有以下几个问题：</p>
 <ul>
@@ -436,30 +436,30 @@
 <li>很难在UE里做资源的版本管理，也不方便多人合作地形</li>
 </ul>
 <p>对前面提到的一些概念和方法不了解也没关系，我接下来会用示例还原这些过程，直到最终的目标方案的原型，也就是Far Cry 5的功能效果。</p>
-<a href="https://pic2.zhimg.com/v2-ecc206a1e4fb8e50da0db2ce0c1feed9_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-ecc206a1e4fb8e50da0db2ce0c1feed9_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-ecc206a1e4fb8e50da0db2ce0c1feed9_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-ecc206a1e4fb8e50da0db2ce0c1feed9_r.jpg"></a>
 <p>图 Far Cry 5 地形编辑器，可以选择一个Terrain的Section或Sector区域来做过程化生成，极大的减小了处理和引擎与Houdini交换的资源量。</p>
 <p>时间和篇幅的缘故，本节会分为上下篇，上半部分主要是在如何修改Houdini Engine源码，可以在UE4里基于Landscape Component进行小规模的迭代迭代的功能，下篇则是实现Houdini Engine管线的基础上，如何制作HDA节点，实现各种不同的编辑效果。</p>
 <h1 id="使用Houdini制作闭环"><a href="#使用Houdini制作闭环" class="headerlink" title="使用Houdini制作闭环"></a>使用Houdini制作闭环</h1><p>本节继续使用上一节的场景资源做作为测试用例，讲解一些HDA Input基础知识，让没有Houdini开发经验的程序人员也能很快接手Houdini Engine的改造。首先创建一个用来开发调试用的HDA节点，它的功能就是可以选中UE4场景里的一个Landscape作为Input，通过Houdini Engine把UE4 Landscape Height Data和Layer Data 转换为Heightfiled Height和Mask Data传入到HDA，在HDA里不做任何处理直接输出原始的Height和Mask,再次经过Houdini Engine生成UE4的Landscape Data。</p>
 <p>下图就是一个Houdini闭环处理地形的流程展示，不需要打开Houdini，在UE4里就能完成闭环的操作。</p>
-<a href="https://pic1.zhimg.com/v2-8f362723d317f315cd6e9bbd7713d8ec_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-8f362723d317f315cd6e9bbd7713d8ec_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-8f362723d317f315cd6e9bbd7713d8ec_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-8f362723d317f315cd6e9bbd7713d8ec_r.jpg"></a>
 <p>如何创建一个SOP（Surface OPerators or geometry nodes ）类型的Houdini Node Input的流程，Houdini Engine的官方文档里也有讲解 <a href="https://www.sidefx.com/docs/unreal/_inputs.html" target="_blank" rel="noopener">https://www.sidefx.com/docs/unreal/_inputs.html</a></p>
 <p>方法一，Houdini里File-&gt;New Asset，按下图的创建一个新的Operator</p>
-<a href="https://pic3.zhimg.com/v2-af68efb7fae23df2a86cc1877d4fc606_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-af68efb7fae23df2a86cc1877d4fc606_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-af68efb7fae23df2a86cc1877d4fc606_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-af68efb7fae23df2a86cc1877d4fc606_r.jpg"></a>
 <p>方法二 创建一个Gemotry节点，Create Digital Asset，在HDA的Parameter里添加一个Operate Path的参数，把这个参数的与Object_Merge的Object做关联。</p>
-<a href="https://pic2.zhimg.com/v2-711e3ed787a4679296a73637cef6d409_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-711e3ed787a4679296a73637cef6d409_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-711e3ed787a4679296a73637cef6d409_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-711e3ed787a4679296a73637cef6d409_r.jpg"></a>
 <p>不论用这两种哪个方法制作都可以得到这个HDA文件，把它加入到UE资源并拖入到Level的话，按下图那样把Input类型选择为Landscape Input，就可以选择要处理LandscapeStreamingProxy。而勾选上最下面的“Export Selected Landscape Components Only”，就可以把Landscape Component作为Input输入给Houdini。但就像一开始提到的，原生Houdini Engine的这个功能并不能满足我们的需求。</p>
-<a href="https://pic3.zhimg.com/v2-b0d6c5907bcd358319fdffa682a5dc76_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-b0d6c5907bcd358319fdffa682a5dc76_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-b0d6c5907bcd358319fdffa682a5dc76_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-b0d6c5907bcd358319fdffa682a5dc76_r.jpg"></a>
 <h1 id="基于component的更新的问题"><a href="#基于component的更新的问题" class="headerlink" title="基于component的更新的问题"></a>基于component的更新的问题</h1><p>如下图所示，原生UE4的Landscape的是支持多选Component Selection的，Houdini Engine也是支持多个Landscape Component 的Input。</p>
-<a href="https://pic2.zhimg.com/v2-319fc24cbc5bf43ec023f12b52f60465_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-319fc24cbc5bf43ec023f12b52f60465_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-319fc24cbc5bf43ec023f12b52f60465_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-319fc24cbc5bf43ec023f12b52f60465_r.jpg"></a>
 <p>选择4x4个Component作为要处理的Landscape信息，然后用Recommit看下结果.</p>
-<a href="https://pic3.zhimg.com/v2-b0d6c5907bcd358319fdffa682a5dc76_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-b0d6c5907bcd358319fdffa682a5dc76_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-b0d6c5907bcd358319fdffa682a5dc76_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-b0d6c5907bcd358319fdffa682a5dc76_r.jpg"></a>
 <p>如下图所示，虽然在效果面上，Houdini Enine把读入的LandScape Data转成HeightField Data 输入给Houdini又没有丝毫误差的的Output后转为LandScape Data，但Houdini Engine把这16个Component创建成了16个Landscape，这明显不是想要的结果。</p>
-<a href="https://pic3.zhimg.com/v2-c0217f69a4e76769f02acc86ec711dea_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-c0217f69a4e76769f02acc86ec711dea_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-c0217f69a4e76769f02acc86ec711dea_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-c0217f69a4e76769f02acc86ec711dea_r.jpg"></a>
 <p>另外要注意的是，新创建的Landscape的Transform和老的Landscape的Transform也不一样，这是Houdini和UE4的高度信息单位不同导致，这个问题也会在后面修改Houdini Engine时造成一定的困扰。而且原生的Component多选功能在Height和Mask更新上也会有一些问题。另外预先提到的一点，虽然Houdini Engine的Landscape的更新上有以上各种问题，但类似读取Landscape的信息来动态摆放，生成植物生态系统等不会修改LandscapeData的功能并不会受影响，这个具体的HDA开发也会在下篇里涉及到。</p>
-<a href="https://pic1.zhimg.com/v2-a0d11027dd969aedc7c2d266053bb750_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-a0d11027dd969aedc7c2d266053bb750_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-a0d11027dd969aedc7c2d266053bb750_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-a0d11027dd969aedc7c2d266053bb750_r.jpg"></a>
 <p>图：类似FarCry5根据选择地块的Mask信息生成植被的管线，原生的Houdini Engine也是可以胜任的。只需要一些Houdini HDA的功能开发就可以了。</p>
 <h1 id="定制Houdini-Engine支持基于Component的生成和更新"><a href="#定制Houdini-Engine支持基于Component的生成和更新" class="headerlink" title="定制Houdini Engine支持基于Component的生成和更新"></a>定制Houdini Engine支持基于Component的生成和更新</h1><p>因为时间和篇幅关系，这里提供一个不需要修改UE4源码，只少量修改Houdini Engine就可以解决问题的方法，先进入到UE4的Houdini Engine Plugin工程代码里。</p>
-<a href="https://pic1.zhimg.com/v2-60d910eab73c16f4fbe51d6f6857dcf4_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-60d910eab73c16f4fbe51d6f6857dcf4_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-60d910eab73c16f4fbe51d6f6857dcf4_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-60d910eab73c16f4fbe51d6f6857dcf4_r.jpg"></a>
 <p>和Landscape相关的功能，是在HoudiniLandscapeUtils和HoudiniEngineUtils里，建议有时间还是全看一遍，这里用注释简单描述下整个数据流程方便定位问题。</p>
 <h1 id="Input部分："><a href="#Input部分：" class="headerlink" title="Input部分："></a>Input部分：</h1><p>调用FHoudiniLandscapeUtils::CreateHeightfieldFromLandscapeComponentArray函数，把选择的Landscape Component的Height Data信息转为Houdini的HeightField Data。</p>
 <pre><code>1. Extracting the height data
@@ -505,9 +505,9 @@ for (int32 LayerIndex = 0; LayerIndex &lt; ImportLayerInfos.Num(); LayerIndex++)
     (uint8*)ImportLayerInfos[LayerIndex].LayerData.GetData(), 0);
 }
 </code></pre><p>然后选中一个Component，给HDA配置上Landscape材质，以及一个HeightField Mask Noise节点，给地形的Groud信息图层信息增加一些噪声 。</p>
-<a href="https://pic4.zhimg.com/v2-6555fec53c0e9ec96e5dae761fd22ea3_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-6555fec53c0e9ec96e5dae761fd22ea3_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-6555fec53c0e9ec96e5dae761fd22ea3_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-6555fec53c0e9ec96e5dae761fd22ea3_r.jpg"></a>
 <p>左边是处理前的效果，右边是增加噪声后的效果。</p>
-<a href="https://pic3.zhimg.com/v2-c98ab665197a0320b4ccc711ccb34a16_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-c98ab665197a0320b4ccc711ccb34a16_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-c98ab665197a0320b4ccc711ccb34a16_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-c98ab665197a0320b4ccc711ccb34a16_r.jpg"></a>
 <p>可以看到，这里已经把Houdini处理过的Height Mask信息写回到了UE4原本的Landscape Layer上，实现了目标的效果。</p>
 <h1 id="Height-Data的处理办法"><a href="#Height-Data的处理办法" class="headerlink" title="Height Data的处理办法"></a>Height Data的处理办法</h1><p>和处理Layer Data的方法类似，把Houdini Engine Output的（TArray&lt; uint16 &gt;&amp; IntHeightData）用LandscapeEdit.SetHeightData函数传回给Landscape Component。</p>
 <pre><code>ULandscapeInfo* LandscapeInfo = 
@@ -530,19 +530,19 @@ LandscapeEdit.SetHeightData(SelectLandscapeComponent-&gt;GetSectionBase().X,
     SelectLandscapeComponent-&gt;ComponentSizeQuads , 
      (uint16*)IntHeightData.GetData(), 0, false );
 </code></pre><p>Convert Transform注释部分的处理，是因为经过重新处理后Houdini的Height Field的Data Range和之前的发生了变化，导致ConvertHeightfieldDataToLandscapeData里生成的HeightData和Transform信息和Input时的Transform信息不匹配，ZeroValueInDigit和OldLandscapeScale.Z分别代表了新地形的Transform信息。需要把两个Transform信息的差异对HeigtData做修正，才能把正确的Height Data写回到Landscape。如果你发现写回的地形整体高了一块或低了一块，或者高度比例和原来不一致，那通常就是这个HeightData的还原处理出错了。所以原始的Landscape Transform也要尽量标准，例如本节示例里初始Landscape的Transform就做的尽量正规化</p>
-<a href="https://pic1.zhimg.com/80/v2-a1e77ac3e79b11fc6d814c5eaddc2f84_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-a1e77ac3e79b11fc6d814c5eaddc2f84_hd.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-a1e77ac3e79b11fc6d814c5eaddc2f84_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-a1e77ac3e79b11fc6d814c5eaddc2f84_hd.jpg"></a>
 <p>看下修改代码后的效果，选择一个Landscape Component地块，在HDA节点里增加一个Heightfiled Noise的节点，对Landscape Height Data做一些轻微的噪声修改：</p>
-<a href="https://pic4.zhimg.com/v2-fc279c68438aa1f97718c4921fb7a237_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-fc279c68438aa1f97718c4921fb7a237_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-fc279c68438aa1f97718c4921fb7a237_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-fc279c68438aa1f97718c4921fb7a237_r.jpg"></a>
 <p>左侧是未处理的，右侧是处理完的。可以看到地块有了噪声的高低差的效果</p>
-<a href="https://pic2.zhimg.com/v2-361247ac84e688cb841ec8eadc0ba139_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-361247ac84e688cb841ec8eadc0ba139_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-361247ac84e688cb841ec8eadc0ba139_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-361247ac84e688cb841ec8eadc0ba139_r.jpg"></a>
 <p>继续做一个Height Field Erode的测试，用TimeShift来控制Height Field Erode的演算帧数。</p>
-<a href="https://pic4.zhimg.com/80/v2-a1e5377ccddf12792063b785f18e750b_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/80/v2-a1e5377ccddf12792063b785f18e750b_hd.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-a1e5377ccddf12792063b785f18e750b_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-a1e5377ccddf12792063b785f18e750b_hd.jpg"></a>
 <p>下图结果是TimeShift = 30 和 TimeShift = 60的效果对比。基本上实现了用Houdini Engine对一个Landsape Component的修改功能。但是问题也很明显。处理的Component和未处理的Component的边缘高度无法很好的衔接。距离推上生产线，还有不少功能需要开发和支持。</p>
-<a href="https://pic2.zhimg.com/v2-15b2752b49c7b4285a87984e2ef81f95_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-15b2752b49c7b4285a87984e2ef81f95_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-15b2752b49c7b4285a87984e2ef81f95_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-15b2752b49c7b4285a87984e2ef81f95_r.jpg"></a>
 <p>图：Height Field Erode效果生成，相比整个Landscape的演算，一个Component只要几秒内就能完成效果计算。</p>
 <p>PS: 6月28日补充，在植被系统的预研究，发现了有绘制选取的方式来提交修改区域，比选择Landscape Component更加灵活。就在这里也补充一遍了。</p>
 <p>UE4除了Component Select Tool之外，在Terrain Sculpt Tool里提供Region Selection Tool的功能，这个要比Component Select Tool更加灵活和便捷。但和Component Select Tool一样，这个功能对原生的Houdini Engine并不适用…</p>
-<a href="https://pic3.zhimg.com/v2-2484ff17a5b8852ec2801f7ad37a4a5e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-2484ff17a5b8852ec2801f7ad37a4a5e_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2484ff17a5b8852ec2801f7ad37a4a5e_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2484ff17a5b8852ec2801f7ad37a4a5e_r.jpg"></a>
 <p>如上图所示，Region Selection Tool是Terrain Sculpt Tool里的功能，不过可以借用这个功能来作为Input的Mask Paint来使用。接下来看下怎么扩展Houdini Engine把这个Mask作为Input传到Houdini里去。</p>
 <p>Region Selection Tool绘制的Mask的方式，当使用者绘制时，会在FLandscapeToolStrokeMask::Apply函数里根据笔触和权重值，把绘制值添加到class ULandscapeInfo的TMap&lt;FIntPoint,float&gt; SelectedRegion 里的，只有绘制过的区域才会保存在SelectedRegion里，其中FIntPoint代表的是在Landscape里的XY位置信息，作为整型保存，而float为绘制Mask的权重。</p>
 <p>拿到了SelectedRegion后，就是要在Houdini Engine里把它作为Mask，输入到HDA中进行处理。Houdini Engine是在FHoudiniLandscapeUtils::CreateHeightfieldFromLandscapeComponent函数里对Height Data和Mask Data进行Input打包的，这里选择在这个函数里加入SelectedRegion的Mask的打包工作。</p>
@@ -585,11 +585,11 @@ LandscapeEdit.SetHeightData(SelectLandscapeComponent-&gt;GetSectionBase().X,
 　　　　SelectedComponents = LandscapeInfo-&gt;GetSelectedRegionComponents();    
 }       
 </code></pre><p>把名为“SelectedRegion”的Mask作为Input输入到HDA后，需要在HDA里对应这个Mask Layer来识别。在HDA的Heightfield Noise节点里，把SelectedRegion作为Mask Layer来使用</p>
-<a href="https://pic3.zhimg.com/v2-18e69b9c9c3d9645a32bff3df0b830f2_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-18e69b9c9c3d9645a32bff3df0b830f2_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-18e69b9c9c3d9645a32bff3df0b830f2_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-18e69b9c9c3d9645a32bff3df0b830f2_r.jpg"></a>
 <p>这样HeightField只有在有Mask的部分会有Noise的效果，这个同样也可以用在植被的Entity Point Cloud的生成上。</p>
-<a href="https://pic3.zhimg.com/v2-2d2a0c56394fa631c525d4d18f1fc2b6_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-2d2a0c56394fa631c525d4d18f1fc2b6_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2d2a0c56394fa631c525d4d18f1fc2b6_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2d2a0c56394fa631c525d4d18f1fc2b6_r.jpg"></a>
 <p>下图的效果，就是在绘制的’X’的区域内，对9个Landscape Component产生噪声变化。</p>
-<a href="https://pic2.zhimg.com/v2-29a27cd3db0d940bd196199520051db5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-29a27cd3db0d940bd196199520051db5_r.jpg"></a>
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-29a27cd3db0d940bd196199520051db5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-29a27cd3db0d940bd196199520051db5_r.jpg"></a>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>Houdini Engine基于Landscape Component的过程化生成，确实可以大幅度的提升生成效率和速度，但是Houdini Engine和HDA制作都还需要一系列的定制开发</p>
 <ul>
 <li>对多选Landscape Component的支持，并且解决多个Component之间的接缝问题。</li>
@@ -667,7 +667,7 @@ LandscapeEdit.SetHeightData(SelectLandscapeComponent-&gt;GetSectionBase().X,
 
       <section class="author-profile">
         <div class="info" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <a href="https://zhuanlan.zhihu.com/p/37891783" class="profile gravatar"><img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg" itemprop="image" alt="TraceYang" height="70" width="70"></a>
+          <a href="https://zhuanlan.zhihu.com/p/37891783" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg" itemprop="image" alt="TraceYang" height="70" width="70"></a>
           <div class="meta">
             <span class="title">Author</span>
             <h3 itemprop="name">

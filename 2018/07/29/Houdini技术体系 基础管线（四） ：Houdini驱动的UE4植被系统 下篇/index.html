@@ -395,7 +395,7 @@
       <p class="entry-census">
         <span>
           <a href="https://zhuanlan.zhihu.com/p/39236220">
-            <img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg">
+            <img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg">
           </a>
         </span>
         <span>
@@ -418,7 +418,7 @@
         
         <div class="entry-content">
           <h1 id="查看作者原文"><a href="#查看作者原文" class="headerlink" title="查看作者原文"></a><a href="https://zhuanlan.zhihu.com/p/39236220" target="_blank" rel="noopener">查看作者原文</a></h1><h1 id="Authored-by-TraceYang"><a href="#Authored-by-TraceYang" class="headerlink" title="Authored by TraceYang"></a>Authored by TraceYang</h1><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>在上篇中，实现了使用Houdini在UE4里根据地形过程生成植被的最基本的原型。并且支持把植被在UE4里Bake成使用的HierarchicalInstancedStaticMeshComponent的BP形式，一定程度上解决了植被渲染效率的问题。</p>
-<a href="https://pic4.zhimg.com/v2-ac156ea3b64e54d4d3514e37751c031b_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-ac156ea3b64e54d4d3514e37751c031b_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-ac156ea3b64e54d4d3514e37751c031b_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-ac156ea3b64e54d4d3514e37751c031b_r.jpg"></a> 
 <p>但这种方法在开发效率和运行效率上都还有他的问题：</p>
 <ul>
 <li>开发效率方面，这个方案并不支持UE4的Foliage Mode Editor：<ul>
@@ -430,11 +430,11 @@
 </li>
 <li>运行效率优化方面，同一类的Instance并不能放到一个InstancedStaticMeshComponent 这样必定会造成一定程度的性能损耗<br>正因为如此，还有必要Houdini的植被管线与UE4的Foliage Mode编辑的植被系统串联起来。这样Hoduini生成后的内容，美术可以很方便的修改，也可以用Houdini来做二次修正，最终生成的植被也可以使用UE4的植被系统的优化方案。而UE4的Foliage System，其实就是每个Level里有一个AInstancedFoliageActor，每种Foliage Type对应的Instanc Mesh实例都保存在AInstancedFoliageActor的FFoliageMeshInfo里。</li>
 </ul>
-<a href="https://pic2.zhimg.com/v2-e5df6202ec8453702afbe3fb4ac7e721_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-e5df6202ec8453702afbe3fb4ac7e721_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-e5df6202ec8453702afbe3fb4ac7e721_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-e5df6202ec8453702afbe3fb4ac7e721_r.jpg"></a> 
 <p>如果要把Houdini过程化生成与Foliage Mode衔接起来，那么就需要Houdini Engine Input和Output部分可以支持UE4的Foliage System。也就是每个Level的AInstancedFoliageActor里，概括来说就是：</p>
 <p>Houdini Input要增加FoliageType的选项，生成实例的对象不再是用Statice Mesh，而是UE4的Foliage Type<br>Houdini Output直接输出植被实例不再Bake到BP里，而是直接Add到UE4的Foliage System的Foliage Instance里<br>接下来就讲解下如何通过只修改Houdini Engine，不需要触碰UE4引擎源码，来把Houdini植被管线与UE4的植被系统整合到一起的方法。</p>
 <h1 id="Houdini-Input对FoliageType的选项支持"><a href="#Houdini-Input对FoliageType的选项支持" class="headerlink" title="Houdini Input对FoliageType的选项支持"></a>Houdini Input对FoliageType的选项支持</h1><p>上篇中也提到过，原生的Houdini Engine的过程化实例放置功能，并没有把植被做特殊的Input处理，而是作为Geometry来对待。首要任务就是在Houdini Engine Input里可以支持Foliage Type。</p>
-<a href="https://pic2.zhimg.com/v2-1f5dd92180c70f605962a59f1430b1f5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-1f5dd92180c70f605962a59f1430b1f5_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-1f5dd92180c70f605962a59f1430b1f5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-1f5dd92180c70f605962a59f1430b1f5_r.jpg"></a> 
 <p>先进入到HoudiniAssetInput.h里，在EHoudiniAssetInputType的Enum里增加FoliageTypeInput。</p>
 <pre><code>namespace EHoudiniAssetInputType
 {
@@ -462,7 +462,7 @@
         .OnIsAssetAcceptableForDrop( SAssetDropTarget::FIsAssetAcceptableForDrop::CreateLambda(
                 []( const UObject* InObject ) {
                     return InObject &amp;&amp; InObject-&gt;IsA&lt; /*UStaticMesh*/ UFoliageType &gt;();
-</code></pre><a href="https://pic3.zhimg.com/v2-e7ecba334d6cfd01cf0be85c3dd0b836_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-e7ecba334d6cfd01cf0be85c3dd0b836_r.jpg"></a> 
+</code></pre><a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-e7ecba334d6cfd01cf0be85c3dd0b836_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-e7ecba334d6cfd01cf0be85c3dd0b836_r.jpg"></a> 
 <p>这样，HDA里就增加了FoliageTypeInput的选项，并添加到Input里了。这里不得不说Unity写工具界面比UE4的效率高太多了。</p>
 <p>虽然通过修改Houdini Engine，把FoliageType的Input读入了，但是Houdini Engine的管线的实例化部分，还是只能对Geometry来进行处理，这里就需要在FHoudiniEngineUtils::HapiCreateInputNodeForObjects函数里，获取FoliageType对应的Static Mesh再输出给Houdini Input Node了。</p>
 <pre><code>if (UFoliageType_InstancedStaticMesh * InputFoliageType = Cast&lt;UFoliageType_InstancedStaticMesh&gt;(InputObjects[InputIdx]))
@@ -476,7 +476,7 @@
     SelectInputFoliageTypeArray.Add(InputFoliageType);
 }
 </code></pre><p>这样改造Houdini Engine后，输入FoliageType以及Landscape的Draw SelectRegion，就可以和上篇一样输出植被了。</p>
-<a href="https://pic2.zhimg.com/v2-54a3985309f4a0098fca6accb796b2e9_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-54a3985309f4a0098fca6accb796b2e9_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-54a3985309f4a0098fca6accb796b2e9_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-54a3985309f4a0098fca6accb796b2e9_r.jpg"></a> 
 <p>Houdini Input支持Foliage Type后，接下来要实现的就是Houdini Output到Foliage System的功能了。</p>
 <h1 id="Houdini-Output与Foliage-Editor的关联"><a href="#Houdini-Output与Foliage-Editor的关联" class="headerlink" title="Houdini Output与Foliage Editor的关联"></a>Houdini Output与Foliage Editor的关联</h1><p>Output与FoliageEditor关联方面最基础的需求有以下几点。</p>
 <p>Houdini输出的Entity Point Cloud所对应的Instance可以直接Add到UE4的Foliage System里。<br>美术可以通过绘制区域来对已经生成部分再次做过程化生成，或者直接利用FoliageEdit手绘的方式来进行迭代调整。<br>手绘调整部分和Houdini自动化生成部分可以分Layer保存，可以根据情况选择自动生成部分是否影响到手工调整部分。<br>FC5里也没有提及第三项的实现方式，所以基础管线部分主要讲解前两项的实现方法，而第三条在后续文章里会参考GDC2017上GHOST RECON的地形工具的方法来实现。</p>
@@ -521,7 +521,7 @@ for (int32 InstanceIdx = 0; InstanceIdx &lt; InstancerPartTransforms.Num(); ++In
     MeshInfo-&gt;AddInstance(IFA, FoliageSettings, Inst, nullptr, true);
 }    
 </code></pre><p>如下图所示，过程化植被也加入到了Level的AInstancedFoliageActor里。这样生成后也可以使用Foliage Editor来做二次修改。</p>
-<a href="https://pic1.zhimg.com/80/v2-2f227cb2396920c72912cf83d417baa0_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/80/v2-2f227cb2396920c72912cf83d417baa0_hd.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2f227cb2396920c72912cf83d417baa0_hd.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-2f227cb2396920c72912cf83d417baa0_hd.jpg"></a> 
 <p>当场景美术需要做二次修改时，那么首先需要把修改区域的植被先清除掉，再使用Houdini对这块绘制区域重新过程化生成植被。这就需要Houdini Engine可以支持移除掉绘制区域植被的功能。这个可以参考void FEdModeFoliage::ReapplyInstancesForBrush的方法。使用MeshInfo-&gt;InstanceHash-&gt;GetInstancesOverlappingBox来获取美术绘制范围的Instance，在利用MeshInfo-&gt;InstanceHash-&gt;RemoveInstance把范围内对应的Foliage Type移除，再使用HDA来重新生成。在上一篇中我们也讲到Select Tool其实绘制的是地表的Mask，也就是对应地形Tile的X,Y值，所以这里还需要把Landscape的X,Y值转成世界空间的Box，来做判断，这部分的实现代码如下：</p>
 <pre><code>ULandscapeComponent* SelectLandscapeComponent = FHoudiniLandscapeUtils::SelectLandscapeComponentArray[Index];
 int32 MinX = MAX_int32;
@@ -562,9 +562,9 @@ for (int32 X = MinX; X &lt;= MaxX; X++)
 MeshInfo-&gt;RemoveInstances(IFA, InInstancesToRemove, true);
 </code></pre><p>迭代SelectRegion的每一个绘制点，把这个绘制点根据地形世界变化转换为对应的Box，再判断Box里是否有Instance，再进行移除操作。如果是基于Landscape Component做再生成就简单很多了，获取这个Component的Box，移除掉Box范围内的植被实例。</p>
 <p>分步的看一下修改改后的效果。首先Houdini Engine会把绘制区域的植被全部清除掉。</p>
-<a href="https://pic2.zhimg.com/v2-1a6b4415626b8262d92d9fcb07a4a8b5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-1a6b4415626b8262d92d9fcb07a4a8b5_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-1a6b4415626b8262d92d9fcb07a4a8b5_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-1a6b4415626b8262d92d9fcb07a4a8b5_r.jpg"></a> 
 <p>然后再根据HDA里的Scatter算法，来摆放Instance并加入到关卡的AInstancedFoliageActor里。</p>
-<a href="https://pic4.zhimg.com/v2-04063765a3df42e2a71b80d68356070f_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic4.zhimg.com/v2-04063765a3df42e2a71b80d68356070f_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-04063765a3df42e2a71b80d68356070f_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-04063765a3df42e2a71b80d68356070f_r.jpg"></a> 
 <p>之前的代码示例只是移除其中一种FoliageType，如果需要删除掉绘制区域的所有Foliage Type的话，只需要迭代每个FoliageType对应的FFoliageMeshInfo，再进行删除Instance操作即可。</p>
 <pre><code> TMap&lt;UFoliageType*, FFoliageMeshInfo*&gt; InstancesFoliageType = IFA-&gt;GetAllInstancesFoliageType();
 
@@ -575,14 +575,14 @@ for (auto&amp; MeshPair : InstancesFoliageType)
 }
 </code></pre><p>就此，一个最基本的Houdini驱动的UE4植被系统的FoliageType部分就完成了。而一些具体的细节改动和工具开发，会放在内容制作部分再做讲解。</p>
 <p>GrassType的对应<br>上一节也讲到，UE4的植被系统除了Foliage Type外，还有Grass Type,Grass Type除了没有碰撞外，保存和生成方式也不一样，Foliage Type的植被是制作阶段就保存在AInstancedFoliageActor里，在游戏运行时跟随Level加载后作为Instance来渲染。而Grass Type虽然也是跟Foliage Type一样，使用的HierarchicalInstancedStaticMeshComponents来进行渲染，区别在于它是在游戏运行时根据相机的视角来生成的。而GrassType的分布信息，则是根据UE4的地形材质系统来输出的。就如下图所示，默认的哪种GrassType被布置地面的哪个位置，是通过采样Landsacpe Layer的信息来确定的。但这种方式就导致了Grass和Layer之前的强制绑定关系。在一些特殊需求上，比如在一些特定的地标区域生成某种特定的草，或者排除掉某些特定草的需求，使用默认的方案都很难解决。</p>
-<a href="https://pic3.zhimg.com/v2-35f37bad6837bbf762d2c5a78840bfaa_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic3.zhimg.com/v2-35f37bad6837bbf762d2c5a78840bfaa_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-35f37bad6837bbf762d2c5a78840bfaa_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-35f37bad6837bbf762d2c5a78840bfaa_r.jpg"></a> 
 <p>一种折衷的方案，是像下图这样，自己输入一张全场景的植被布局Mask图，来作为GrassType的采样信息使用，但这受限于植被的种类，地图大小，很难保障精确，只能作为临时的方案。</p>
-<a href="https://pic1.zhimg.com/v2-74dc0889b2740916e87b3943058984c4_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic1.zhimg.com/v2-74dc0889b2740916e87b3943058984c4_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-74dc0889b2740916e87b3943058984c4_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-74dc0889b2740916e87b3943058984c4_r.jpg"></a> 
 <p>还有一种方法就是直接改引擎源码，void ALandscapeProxy::UpdateGrass(const TArray<fvector>&amp; Cameras, bool bForceSync)的部分。这个就不是光修改Houdini Engine引擎就能解决的了，文章篇幅关系也只能放到后文单独挑出一章节来做讲解。</fvector></p>
 <p>总结<br>至此，地形和植被相关的整个管线部分已经基本上打通，但和国外AAA级产品的过程化工具比，还是有很大的差距。</p>
-<a href="https://pic2.zhimg.com/v2-ce321c518405a872f091f522b422db01_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-ce321c518405a872f091f522b422db01_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-ce321c518405a872f091f522b422db01_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-ce321c518405a872f091f522b422db01_r.jpg"></a> 
 <p>管线上的主要的差距还是在工具易用性和完善程度上，比如幽灵行动：荒野里，通过把过程化生成的地形，道路，铁路，以及手工修改的部分做分层保存，这样当一层做修改或恢复时，才不会影响到其他的层的修改。</p>
-<a href="https://pic2.zhimg.com/v2-c9dff7fcd423361a83841bd113bee84d_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://pic2.zhimg.com/v2-c9dff7fcd423361a83841bd113bee84d_r.jpg"></a> 
+<a href="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-c9dff7fcd423361a83841bd113bee84d_r.jpg" data-fancybox="images" data-caption="作者:TraceYang" target="_blank" rel="noopener"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-c9dff7fcd423361a83841bd113bee84d_r.jpg"></a> 
 <p>后续的文章中，会逐步的深入到具体的场景地形和植被制作上，届时也会涉及到更多Houdini Enigne管线修改的细节上。</p>
 
 
@@ -655,7 +655,7 @@ for (auto&amp; MeshPair : InstancesFoliageType)
 
       <section class="author-profile">
         <div class="info" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <a href="https://zhuanlan.zhihu.com/p/39236220" class="profile gravatar"><img src="https://pic4.zhimg.com/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg" itemprop="image" alt="TraceYang" height="70" width="70"></a>
+          <a href="https://zhuanlan.zhihu.com/p/39236220" class="profile gravatar"><img src="https://cdn.jsdelivr.net/gh/ZHANGYANG980313/cdnHoudini@1.0/Trace/v2-983c9494a0cad1d483bfd7fe054abfcc_xs.jpg" itemprop="image" alt="TraceYang" height="70" width="70"></a>
           <div class="meta">
             <span class="title">Author</span>
             <h3 itemprop="name">
