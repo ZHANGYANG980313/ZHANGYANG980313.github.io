@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2019-05-03T20:15:01.295Z</updated>
+  <updated>2019-05-04T12:53:00.283Z</updated>
   <id>/</id>
   
   <author>
@@ -15,6 +15,26 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>DarlingInTheFranxx图集</title>
+    <link href="/2019/05/04/DarlingInTheFranxx%E5%9B%BE%E9%9B%86/"/>
+    <id>/2019/05/04/DarlingInTheFranxx图集/</id>
+    <published>2019-05-04T12:40:17.000Z</published>
+    <updated>2019-05-04T12:53:00.283Z</updated>
+    
+    <summary type="html">
+    
+      02的图集
+    
+    </summary>
+    
+      <category term="资源" scheme="/categories/%E8%B5%84%E6%BA%90/"/>
+    
+    
+      <category term="图集" scheme="/tags/%E5%9B%BE%E9%9B%86/"/>
+    
+  </entry>
   
   <entry>
     <title>Hexo搭建笔记</title>
