@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2019-05-04T14:07:21.850Z</updated>
+  <updated>2019-05-06T18:03:39.827Z</updated>
   <id>/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Photogrammetry流程学习回忆</title>
+    <link href="/2019/05/06/Photogrammetry%E6%B5%81%E7%A8%8B%E5%AD%A6%E4%B9%A0%E5%9B%9E%E5%BF%86/"/>
+    <id>/2019/05/06/Photogrammetry流程学习回忆/</id>
+    <published>2019-05-06T14:22:11.000Z</published>
+    <updated>2019-05-06T18:03:39.827Z</updated>
+    
+    <summary type="html">
+    
+      我的Photogrammetry学习之路
+    
+    </summary>
+    
+      <category term="技术" scheme="/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+      <category term="web" scheme="/tags/web/"/>
+    
+      <category term="悦读" scheme="/tags/%E6%82%A6%E8%AF%BB/"/>
+    
+  </entry>
   
   <entry>
     <title>博客搭建随想</title>
@@ -288,6 +310,28 @@
     <summary type="html">
     
       转载自知乎用户TraceYang
+    
+    </summary>
+    
+      <category term="转载" scheme="/categories/%E8%BD%AC%E8%BD%BD/"/>
+    
+    
+      <category term="web" scheme="/tags/web/"/>
+    
+      <category term="悦读" scheme="/tags/%E6%82%A6%E8%AF%BB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Journey中的沙丘渲染（及其shader实现）</title>
+    <link href="/2018/05/31/Journey%E4%B8%AD%E7%9A%84%E6%B2%99%E4%B8%98%E6%B8%B2%E6%9F%93%EF%BC%88%E5%8F%8A%E5%85%B6shader%E5%AE%9E%E7%8E%B0%EF%BC%89/"/>
+    <id>/2018/05/31/Journey中的沙丘渲染（及其shader实现）/</id>
+    <published>2018-05-30T19:16:26.000Z</published>
+    <updated>2019-05-06T14:20:39.528Z</updated>
+    
+    <summary type="html">
+    
+      转载自知乎用户邓佳迪
     
     </summary>
     
