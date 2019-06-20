@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2019-06-20T13:04:19.552Z</updated>
+  <updated>2019-06-20T14:34:15.743Z</updated>
   <id>/</id>
   
   <author>
@@ -17,11 +17,33 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Home（现实场景1）</title>
+    <link href="/2019/06/20/Home%EF%BC%88%E7%8E%B0%E5%AE%9E%E5%9C%BA%E6%99%AF1%EF%BC%89/"/>
+    <id>/2019/06/20/Home（现实场景1）/</id>
+    <published>2019-06-20T13:21:44.000Z</published>
+    <updated>2019-06-20T14:34:15.743Z</updated>
+    
+    <summary type="html">
+    
+      《Freud Gate》的一楼及外景
+    
+    </summary>
+    
+      <category term="生活" scheme="/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="web" scheme="/tags/web/"/>
+    
+      <category term="悦读" scheme="/tags/%E6%82%A6%E8%AF%BB/"/>
+    
+  </entry>
+  
+  <entry>
     <title>网易GameJam之行（开篇）</title>
     <link href="/2019/06/20/%E7%BD%91%E6%98%93GameJam%E4%B9%8B%E8%A1%8C%EF%BC%88%E5%BC%80%E7%AF%87%EF%BC%89/"/>
     <id>/2019/06/20/网易GameJam之行（开篇）/</id>
     <published>2019-06-20T11:46:49.000Z</published>
-    <updated>2019-06-20T13:04:19.552Z</updated>
+    <updated>2019-06-20T13:15:57.009Z</updated>
     
     <summary type="html">
     
