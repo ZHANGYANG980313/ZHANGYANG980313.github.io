@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2019-10-17T10:22:36.957Z</updated>
+  <updated>2019-10-17T10:52:47.225Z</updated>
   <id>/</id>
   
   <author>
@@ -17,11 +17,29 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Yume-《Yume》</title>
+    <link href="/2019/10/17/Yume-%E3%80%8AYume%E3%80%8B/"/>
+    <id>/2019/10/17/Yume-《Yume》/</id>
+    <published>2019-10-17T10:37:12.000Z</published>
+    <updated>2019-10-17T10:52:47.225Z</updated>
+    
+    <summary type="html">
+    
+      游戏Demo《Yume》的场景&amp;原画
+    
+    </summary>
+    
+      <category term="生活" scheme="/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+  </entry>
+  
+  <entry>
     <title>FinalFantasy（致谢场景）</title>
     <link href="/2019/10/17/FinalFantasy%EF%BC%88%E8%87%B4%E8%B0%A2%E5%9C%BA%E6%99%AF%EF%BC%89/"/>
     <id>/2019/10/17/FinalFantasy（致谢场景）/</id>
     <published>2019-10-17T10:03:42.000Z</published>
-    <updated>2019-10-17T10:22:36.957Z</updated>
+    <updated>2019-10-17T10:28:17.294Z</updated>
     
     <summary type="html">
     
@@ -408,28 +426,6 @@
     <id>/2018/06/28/Houdini技术体系 基础管线（三） ：UE4 Landscape Component的方式的地形生成和更新 上篇/</id>
     <published>2018-06-27T21:16:26.000Z</published>
     <updated>2019-05-04T11:16:06.977Z</updated>
-    
-    <summary type="html">
-    
-      转载自知乎用户TraceYang
-    
-    </summary>
-    
-      <category term="转载" scheme="/categories/%E8%BD%AC%E8%BD%BD/"/>
-    
-    
-      <category term="web" scheme="/tags/web/"/>
-    
-      <category term="悦读" scheme="/tags/%E6%82%A6%E8%AF%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>TraceYang大佬的Houdini技术体系 基础管线（二） ：Heightfiled与UE4的无缝导入以及对World Composition的支持</title>
-    <link href="/2018/06/01/Houdini%E6%8A%80%E6%9C%AF%E4%BD%93%E7%B3%BB%20%E5%9F%BA%E7%A1%80%E7%AE%A1%E7%BA%BF%EF%BC%88%E4%BA%8C%EF%BC%89%20%EF%BC%9AHeightfiled%E4%B8%8EUE4%E7%9A%84%E6%97%A0%E7%BC%9D%E5%AF%BC%E5%85%A5%E4%BB%A5%E5%8F%8A%E5%AF%B9World%20Composition%E7%9A%84%E6%94%AF%E6%8C%81%20-%20Copy/"/>
-    <id>/2018/06/01/Houdini技术体系 基础管线（二） ：Heightfiled与UE4的无缝导入以及对World Composition的支持 - Copy/</id>
-    <published>2018-05-31T20:16:26.000Z</published>
-    <updated>2019-05-04T02:50:42.750Z</updated>
     
     <summary type="html">
     
