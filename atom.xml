@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="/"/>
-  <updated>2019-06-20T18:42:30.558Z</updated>
+  <updated>2019-10-17T08:38:06.393Z</updated>
   <id>/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Fantasy-Scene-02（幻想场景2-月下的海滩）</title>
+    <link href="/2019/10/17/Fantasy-Scene-02%EF%BC%88%E5%B9%BB%E6%83%B3%E5%9C%BA%E6%99%AF2-%E6%9C%88%E4%B8%8B%E7%9A%84%E6%B5%B7%E6%BB%A9%EF%BC%89/"/>
+    <id>/2019/10/17/Fantasy-Scene-02（幻想场景2-月下的海滩）/</id>
+    <published>2019-10-17T08:07:47.000Z</published>
+    <updated>2019-10-17T08:38:06.393Z</updated>
+    
+    <summary type="html">
+    
+      《Freud Gate》的幻想场景1
+    
+    </summary>
+    
+      <category term="生活" scheme="/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="web" scheme="/tags/web/"/>
+    
+      <category term="悦读" scheme="/tags/%E6%82%A6%E8%AF%BB/"/>
+    
+  </entry>
   
   <entry>
     <title>Fantasy-Scene-01（幻想场景1-湖中央的樱花树）</title>
@@ -420,28 +442,6 @@
     <summary type="html">
     
       转载自知乎用户TraceYang
-    
-    </summary>
-    
-      <category term="转载" scheme="/categories/%E8%BD%AC%E8%BD%BD/"/>
-    
-    
-      <category term="web" scheme="/tags/web/"/>
-    
-      <category term="悦读" scheme="/tags/%E6%82%A6%E8%AF%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Journey中的沙丘渲染（及其shader实现）</title>
-    <link href="/2018/05/31/Journey%E4%B8%AD%E7%9A%84%E6%B2%99%E4%B8%98%E6%B8%B2%E6%9F%93%EF%BC%88%E5%8F%8A%E5%85%B6shader%E5%AE%9E%E7%8E%B0%EF%BC%89/"/>
-    <id>/2018/05/31/Journey中的沙丘渲染（及其shader实现）/</id>
-    <published>2018-05-30T19:16:26.000Z</published>
-    <updated>2019-05-06T14:20:39.528Z</updated>
-    
-    <summary type="html">
-    
-      转载自知乎用户邓佳迪
     
     </summary>
     
